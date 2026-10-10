@@ -1,0 +1,26 @@
+{
+  "_comment": "Données de DÉMONSTRATION (lignes et arrêts fictifs ; photos placeholders). Une ligne = un QR code dans le bus : /?line=8. Les noms d'arrêts sont des noms propres : ils ne sont pas traduits.",
+  "lines": [
+    {
+      "number": "8",
+      "stops": [
+        { "id": "gare",            "name": "Gare",            "photo": "gare.jpg" },
+        { "id": "parc",            "name": "Parc",            "photo": "parc.jpg" },
+        { "id": "hopital",         "name": "Hôpital",         "photo": "hopital.jpg" },
+        { "id": "marche",          "name": "Marché",          "photo": null },
+        { "id": "ecole",           "name": "École",           "photo": null },
+        { "id": "lac",             "name": "Lac",             "photo": "lac.jpg" },
+        { "id": "jardin_botanique", "name": "Jardin Botanique", "photo": "jardin_botanique.jpg" }
+      ]
+    },
+    {
+      "number": "123",
+      "stops": [
+        { "id": "centre",   "name": "Centre",   "photo": null },
+        { "id": "marche",   "name": "Marché",   "photo": null },
+        { "id": "piscine",  "name": "Piscine",  "photo": null },
+        { "id": "terminus", "name": "Terminus", "photo": null }
+      ]
+    }
+  ]
+}

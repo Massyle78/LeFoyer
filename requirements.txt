@@ -1,0 +1,4 @@
+flask>=3.0
+segno>=1.6
+# Seulement pour tools/build_assets.py (icônes et photos issues de la charte) :
+# pillow

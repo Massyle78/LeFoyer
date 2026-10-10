@@ -1,0 +1,185 @@
+/* Charte graphique « Bus Buddy » : violet foncé #1D05A9, violet clair #9C7EC3, rose #FEDADA.
+   Toutes les tailles sont exprimées en --u : 1u = 1/724 de la largeur (maquette de la charte),
+   avec une largeur maximale de 480 px. */
+@font-face { font-family: "Newsreader"; src: url(../fonts/newsreader-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Newsreader"; src: url(../fonts/newsreader-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+
+:root {
+  --violet: #1D05A9;
+  --violet-2: #9C7EC3;
+  --pink: #FEDADA;
+  --ink: #0d0d12;
+  --w: min(100vw, 480px);
+  --u: calc(var(--w) / 724);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --foot: calc(var(--u) * 96);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; background: var(--violet); font-family: var(--sans); color: var(--ink); }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; touch-action: manipulation; }
+button:focus-visible { outline: 4px solid var(--violet-2); outline-offset: 3px; }
+
+#app { position: relative; max-width: 480px; margin: 0 auto; height: 100dvh; background: var(--pink); overflow: hidden; }
+#screen { display: flex; flex-direction: column; height: 100%; }
+
+/* --- bandeau : numéro de ligne + direction ------------------------------------------------- */
+.top { background: var(--violet); color: #fff; display: flex; align-items: center; gap: calc(var(--u) * 34);
+  padding: calc(var(--u) * 18) calc(var(--u) * 36) calc(var(--u) * 20); min-height: calc(var(--u) * 136); flex: none; }
+.num { font-size: calc(var(--u) * 112); font-weight: 700; line-height: .9; letter-spacing: -.02em; }
+.num.small { font-size: calc(var(--u) * 64); }
+.dir { flex: 1; min-width: 0; }
+.dir small { display: block; font-size: calc(var(--u) * 32); line-height: 1.1; }
+.dir strong { display: block; font-size: calc(var(--u) * 58); font-weight: 400; text-transform: uppercase; line-height: 1.04;
+  overflow-wrap: anywhere; }
+.voice { flex: none; width: calc(var(--u) * 84); height: calc(var(--u) * 84); min-width: 44px; min-height: 44px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; background: rgba(255,255,255,.14); }
+.voice[aria-pressed="false"] { opacity: .65; }
+
+/* --- contenu -------------------------------------------------------------------------------------- */
+main { flex: 1; overflow-y: auto; padding: calc(var(--u) * 40) calc(var(--u) * 40) calc(var(--u) * 260); }
+.head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: calc(var(--u) * 34); }
+.htext { flex: 1; min-width: 0; }
+h1 { font-family: var(--serif); font-weight: 500; color: var(--violet); font-size: calc(var(--u) * 82); line-height: 1.02; margin: 0; letter-spacing: -.01em; }
+.sub { font-size: calc(var(--u) * 38); line-height: 1.2; margin: calc(var(--u) * 14) 0 0; }
+.hint { font-size: calc(var(--u) * 32); margin-top: calc(var(--u) * 40); }
+
+.brand { position: relative; flex: none; width: calc(var(--u) * 190); height: calc(var(--u) * 190); }
+.brand .logo { position: absolute; left: 34%; top: 0; width: 38%; height: 38%; background: var(--violet); }
+.brand-text { position: absolute; left: 0; right: 0; bottom: 4%; width: 100%; }
+.brand-text text { font: 800 24px var(--sans); fill: var(--ink); letter-spacing: .02em; }
+
+/* --- icônes en masque : une couleur du CSS, un fichier PNG ------------------------------------------ */
+.ico { display: block; width: 100%; height: 100%; background: var(--violet);
+  -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
+
+/* --- tuiles ----------------------------------------------------------------------------------------------- */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 40); }
+.tile { display: flex; flex-direction: column; background: #fff; border-radius: calc(var(--u) * 46); overflow: hidden;
+  min-height: calc(var(--u) * 300); box-shadow: 0 2px 0 rgba(29,5,169,.08); text-align: center; }
+.tile:active { transform: scale(.98); }
+.tico { flex: 1; display: grid; place-items: center; padding: calc(var(--u) * 16) 0 calc(var(--u) * 6); }
+.disc { width: calc(var(--u) * 168); aspect-ratio: 1; border-radius: 50%; background: var(--pink); display: grid; place-items: center; }
+.disc .ico { width: 64%; height: 64%; }
+.pill { background: var(--violet); color: #fff; border-radius: 999px; min-height: calc(var(--u) * 84); margin: 0;
+  display: grid; place-items: center; padding: calc(var(--u) * 8) calc(var(--u) * 20);
+  font-size: max(15px, calc(var(--u) * 33)); line-height: 1.12; font-weight: 500; }
+
+/* --- mon arrêt (bandeau sur l'accueil) --------------------------------------------------------------------- */
+.mystop { display: grid; grid-template-columns: calc(var(--u) * 190) 1fr; gap: calc(var(--u) * 24); width: 100%;
+  background: #fff; border-radius: calc(var(--u) * 46); padding: calc(var(--u) * 22); margin-bottom: calc(var(--u) * 40); text-align: left;
+  border: 3px solid var(--violet); }
+.mphoto { grid-row: 1; aspect-ratio: 1; border-radius: calc(var(--u) * 32); overflow: hidden; background: var(--pink); display: block; }
+.mphoto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mtext { grid-row: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.mtext small { font-size: calc(var(--u) * 30); color: var(--violet); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.mtext strong { font-family: var(--serif); font-weight: 600; color: var(--violet); font-size: calc(var(--u) * 58); line-height: 1.05; }
+.mtext em { font-style: normal; font-size: calc(var(--u) * 34); font-weight: 700; margin-top: 4px; }
+.mystop .strip { grid-column: 1 / -1; margin-top: calc(var(--u) * 6); }
+.noimg { width: 100%; height: 100%; display: grid; place-items: center; background: var(--pink); }
+.noimg .ico { width: 56%; height: 56%; background: var(--violet-2); }
+
+/* --- frise des arrêts : 4 arrêts maximum, « ··· » pour la suite ------------------------------------------------ */
+.strip { list-style: none; margin: calc(var(--u) * 28) 0 0; padding: 0; display: flex; align-items: flex-start; }
+.strip li { position: relative; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.strip li + li::before { content: ""; position: absolute; top: calc(var(--u) * 21); right: 50%; width: 100%; height: calc(var(--u) * 8); background: var(--violet-2); }
+.strip li > i, .strip .dots { position: relative; z-index: 1; }
+.node > i { width: calc(var(--u) * 46); height: calc(var(--u) * 46); border-radius: 50%; background: var(--pink); border: calc(var(--u) * 9) solid var(--violet); }
+.node.next > i { background: var(--violet); width: calc(var(--u) * 58); height: calc(var(--u) * 58); margin-top: calc(var(--u) * -6); }
+.node.target > i { width: calc(var(--u) * 66); height: calc(var(--u) * 66); margin-top: calc(var(--u) * -10); background: #fff; border: calc(var(--u) * 16) solid var(--violet); }
+.node.next.target > i { background: #fff; }
+.node span { margin-top: 6px; font-size: max(12px, calc(var(--u) * 28)); line-height: 1.1; max-width: 100%; padding: 0 2px; overflow-wrap: anywhere; }
+.node.next span, .node.target span { font-weight: 800; color: var(--violet); }
+.gap { justify-content: flex-start; }
+.dots { display: flex; gap: calc(var(--u) * 12); height: calc(var(--u) * 46); align-items: center; background: transparent; }
+.dots i { width: calc(var(--u) * 16); height: calc(var(--u) * 16); border-radius: 50%; background: var(--violet); }
+.gap small { margin-top: 6px; font-size: max(12px, calc(var(--u) * 28)); color: var(--violet); font-weight: 700; }
+.strip.compact { margin-top: calc(var(--u) * 10); }
+.strip.compact .node span { font-size: max(11px, calc(var(--u) * 24)); }
+
+/* --- carrousel : un arrêt à la fois, voisins en transparence ---------------------------------------------------- */
+.picker { overflow-x: hidden; }
+.car { position: relative; margin: calc(var(--u) * 30) calc(var(--u) * -40) 0; }
+.track { position: relative; display: flex; gap: calc(var(--u) * 28); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  padding: calc(var(--u) * 14) 0; padding-inline: calc(50% - var(--cw) / 2); --cw: calc(var(--w) * .62); overscroll-behavior-x: contain; }
+.track::-webkit-scrollbar { display: none; }
+.scard { flex: 0 0 var(--cw); scroll-snap-align: center; background: #fff; border-radius: calc(var(--u) * 46); padding: calc(var(--u) * 22) calc(var(--u) * 22) 0;
+  opacity: .45; filter: saturate(.7); transform: scale(.9); transform-origin: center; cursor: pointer; display: flex; flex-direction: column; }
+.scard.active { opacity: 1; filter: none; transform: none; box-shadow: 0 6px 0 rgba(29,5,169,.12); }
+.scard:not(.active) .spill { background: var(--violet-2); }
+.simg { aspect-ratio: 1 / .95; border-radius: calc(var(--u) * 36); overflow: hidden; background: var(--pink); }
+.simg img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.spill { background: var(--violet); color: #fff; border-radius: 999px; margin: calc(var(--u) * 22) calc(var(--u) * -22) 0; min-height: calc(var(--u) * 100);
+  display: grid; place-items: center; text-align: center; padding: 0 calc(var(--u) * 24); font-size: max(16px, calc(var(--u) * 38)); font-weight: 500; line-height: 1.1; }
+.nav { position: absolute; top: 34%; z-index: 2; width: calc(var(--u) * 96); height: calc(var(--u) * 96); min-width: 48px; min-height: 48px; border-radius: 50%;
+  background: var(--violet); display: grid; place-items: center; box-shadow: 0 0 0 4px #fff; }
+.nav.prev { left: calc(19% - var(--u) * 48); }
+.nav.next { right: calc(19% - var(--u) * 48); }
+.cta { display: block; width: 100%; margin-top: calc(var(--u) * 36); background: var(--violet); color: #fff; border-radius: 999px;
+  min-height: calc(var(--u) * 110); font-size: max(20px, calc(var(--u) * 44)); font-weight: 700; }
+.cta.light { background: #fff; color: var(--violet); }
+
+/* --- phrase à montrer ------------------------------------------------------------------------------------------- */
+.cardpage { display: flex; flex-direction: column; }
+.card { background: #fff; border-radius: calc(var(--u) * 56); padding: calc(var(--u) * 40) calc(var(--u) * 36); display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 26); text-align: center; }
+.cdisc { width: calc(var(--u) * 250); aspect-ratio: 1; border-radius: 50%; background: var(--pink); display: grid; place-items: center; }
+.cdisc .ico { width: 62%; height: 62%; }
+.big { font-family: var(--serif); font-weight: 600; color: var(--violet); font-size: max(30px, calc(var(--u) * 70)); line-height: 1.12; margin: 0; overflow-wrap: anywhere; }
+.cstop { display: flex; align-items: center; gap: calc(var(--u) * 22); background: var(--pink); border-radius: calc(var(--u) * 40); padding: calc(var(--u) * 14); width: 100%; }
+.cphoto { width: calc(var(--u) * 150); aspect-ratio: 1; border-radius: calc(var(--u) * 30); overflow: hidden; flex: none; }
+.cphoto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cstop strong { font-family: var(--serif); color: var(--violet); font-size: calc(var(--u) * 52); text-align: left; }
+.say { display: inline-flex; align-items: center; gap: 12px; background: var(--violet); color: #fff; border-radius: 999px; padding: 0 calc(var(--u) * 56);
+  min-height: calc(var(--u) * 100); font-size: max(18px, calc(var(--u) * 40)); font-weight: 700; }
+.creminder { margin-top: calc(var(--u) * 20); }
+.mark { width: calc(var(--u) * 250); fill: var(--violet); }
+.mark.no { fill: var(--violet-2); }
+
+/* --- mon arrêt (plein écran) ------------------------------------------------------------------------------------------ */
+.bigstop { background: #fff; border-radius: calc(var(--u) * 56); padding: calc(var(--u) * 26) calc(var(--u) * 26) 0; }
+.bphoto { aspect-ratio: 1 / .62; border-radius: calc(var(--u) * 40); overflow: hidden; }
+.bphoto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bpill { background: var(--violet); color: #fff; border-radius: 999px; margin: calc(var(--u) * 24) calc(var(--u) * -26) 0; min-height: calc(var(--u) * 120);
+  display: grid; place-items: center; font-size: max(20px, calc(var(--u) * 52)); font-weight: 500; text-align: center; padding: 0 20px; }
+.left { font-family: var(--serif); font-weight: 600; color: var(--violet); font-size: max(28px, calc(var(--u) * 78)); text-align: center; margin: calc(var(--u) * 34) 0 0; line-height: 1.05; }
+.left.soon { background: var(--violet); color: #fff; border-radius: 999px; padding: calc(var(--u) * 14) 0; }
+
+/* --- liste de lignes (si pas de QR) -------------------------------------------------------------------------------------- */
+.rows { display: flex; flex-direction: column; gap: calc(var(--u) * 28); }
+.row { display: flex; align-items: center; gap: calc(var(--u) * 30); background: #fff; border-radius: calc(var(--u) * 46); padding: calc(var(--u) * 24) calc(var(--u) * 36); text-align: left; min-height: calc(var(--u) * 150); }
+.row b { background: var(--violet); color: #fff; border-radius: calc(var(--u) * 30); padding: 0 calc(var(--u) * 30); font-size: calc(var(--u) * 80); line-height: 1.2; }
+.row span { font-size: calc(var(--u) * 48); text-transform: uppercase; }
+
+/* --- retour, bulle « répétez doucement », langues ------------------------------------------------------------------------ */
+.back { position: absolute; left: calc(var(--u) * 56); bottom: calc(var(--foot) + var(--u) * 40); z-index: 3; display: inline-flex; align-items: center; gap: calc(var(--u) * 26);
+  background: #fff; color: var(--violet); border-radius: 999px; padding: 0 calc(var(--u) * 58) 0 calc(var(--u) * 44); min-height: calc(var(--u) * 108); min-width: 48px;
+  font-family: var(--serif); font-weight: 500; font-size: max(22px, calc(var(--u) * 54)); box-shadow: 0 2px 0 rgba(29,5,169,.12); }
+.back svg { width: calc(var(--u) * 62); height: auto; }
+.bubble { position: absolute; z-index: 3; right: calc(var(--u) * -50); bottom: calc(var(--foot) - var(--u) * 70); width: calc(var(--u) * 310); aspect-ratio: 1;
+  border-radius: 50%; background: var(--violet-2); color: #fff; overflow: hidden; }
+.bubble svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.bubble text { fill: #fff; font: 600 15.5px var(--sans); }
+.bubble-ico { position: absolute; left: 41%; top: 52%; width: 34%; height: 34%; background: var(--ink); }
+.foot { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: var(--foot); background: var(--violet); color: #fff; display: flex; align-items: center;
+  gap: 8px; padding: 0 12px; }
+.flabel { font-size: clamp(13px, calc(var(--u) * 36), 20px); flex: none; }
+.langs { display: flex; gap: 6px; flex: 1; min-width: 0; justify-content: flex-end; }
+.lang { background: #fff; color: var(--ink); border-radius: 999px; padding: 0 clamp(8px, calc(var(--u) * 18), 14px); min-height: 44px; font-size: clamp(12px, calc(var(--u) * 28), 15px); white-space: nowrap; }
+.lang.active { font-weight: 800; box-shadow: 0 0 0 calc(var(--u) * 7) var(--violet-2); }
+
+/* --- alarme d'arrêt (plein écran) -------------------------------------------------------------------------------------------- */
+#overlay { position: absolute; inset: 0; z-index: 20; pointer-events: none; }
+#overlay > * { pointer-events: auto; }
+.alarm { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 28);
+  padding: calc(var(--u) * 60); text-align: center; background: var(--pink); color: var(--violet); overflow-y: auto; }
+.alarm.now { background: var(--violet); color: #fff; }
+.alarm .adisc { width: calc(var(--u) * 340); aspect-ratio: 1; border-radius: 50%; background: #fff; display: grid; place-items: center; }
+.alarm .adisc .ico { width: 64%; height: 64%; }
+.alarm h2 { font-family: var(--serif); font-weight: 600; font-size: max(40px, calc(var(--u) * 110)); line-height: 1; margin: 0; }
+.alarm p { font-size: max(20px, calc(var(--u) * 50)); margin: 0; }
+.alarm.approaching p { color: var(--ink); }
+
+.demo { position: absolute; z-index: 30; top: 0; right: 0; white-space: nowrap; background: #fff; color: var(--violet); border-radius: 0 0 0 12px; padding: 3px 10px; font-weight: 700; font-size: 11px; opacity: .85; }
+
+@media (prefers-reduced-motion: reduce) { .track { scroll-behavior: auto; } }
