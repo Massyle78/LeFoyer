@@ -4,7 +4,7 @@ import { goesTo, alarmPhase } from './logic.js';
 import { languageName, loadLanguages, makeT, speechLang } from './i18n.js';
 import { SimulatedPosition } from './position.js';
 import { LANGS, demo, params, save, speedSeconds, store } from './store.js';
-import { alarmHtml, renderView } from './views.js';
+import { alarmHtml, renderView, statusBandHtml } from './views.js';
 
 const screen = document.getElementById('screen');
 const overlay = document.getElementById('overlay');
@@ -29,6 +29,10 @@ function context() {
     pos: position ? position.state : { next: 0, atStop: false },
     destIndex: destIndex >= 0 ? destIndex : null,
     voice: store.voice,
+    colors: store.colors,
+    vibration: store.vibration,
+    canVibrate: vibrationService.available,
+    demo,
     languages: LANGS.map((code) => ({ code, name: languageName(code) })),
   };
 }
@@ -57,6 +61,7 @@ function draw() {
   const { view, params } = current();
   const c = context();
   document.documentElement.lang = store.lang;
+  document.documentElement.classList.toggle('no-colors', !store.colors); // réglage « Couleurs »
   const keepScroll = screen.dataset.view === view ? screen.querySelector('main')?.scrollTop : 0;
   screen.innerHTML = renderView(view, params, c);
   screen.dataset.view = view;
@@ -121,9 +126,11 @@ function pick(need) {
   if (need === 'check') {
     const yes = goesTo({ count: line.stops.length, ...position.state }, stopIndex);
     say(t(yes ? 'answer.yes' : 'answer.no', { stop: stop.name }));
+    a11y.feedback(yes ? 'yes' : 'no');
     return go('answer', { stop: stop.id, yes }, { replace: true });
   }
   setDestination(stop.id);
+  a11y.feedback('confirm');
   if (need === 'remind') {
     say(`${t('mystop.title')}: ${stop.name}`);
     return go('mystop', {}, { replace: true });
@@ -136,6 +143,7 @@ function pick(need) {
 function setDestination(stopId) {
   store.dest = stopId;
   shownAlarms.clear();
+  stopAlarmFeedback();
   save();
 }
 
@@ -151,22 +159,50 @@ function onPosition(state) {
     const c = context();
     const stopName = line.stops[destIndex].name;
     overlay.innerHTML = alarmHtml(c, phase, stopName);
-    a11y.feedback('alarm');
     say(`${c.t(`alarm.${phase}.title`)} ${c.t(`alarm.${phase}.sub`, { stop: stopName })}`);
+    startAlarmFeedback(phase);
+  } else if (state.atStop && phase !== 'passed' && destIndex >= 0) {
+    a11y.feedback('stopped'); // le bus vient de s'arrêter à un arrêt (pas le mien)
   }
   if (['home', 'mystop'].includes(current().view)) draw(); // mise à jour calme, sans animation
+  else refreshBand(); // les autres écrans gardent leur état (ex. carrousel) : on ne met à jour que la bande de couleur
+}
+
+// Orange : une série de vibrations. Rouge : « C'est mon arrêt » vibre fort et recommence jusqu'à ce qu'on touche OK.
+let alarmTimer = null;
+function startAlarmFeedback(phase) {
+  stopAlarmFeedback();
+  const kind = phase === 'now' ? 'arrive' : 'soon';
+  a11y.feedback(kind);
+  if (phase === 'now') alarmTimer = setInterval(() => a11y.feedback(kind), 6000);
+}
+function stopAlarmFeedback() {
+  clearInterval(alarmTimer);
+  alarmTimer = null;
+}
+
+function refreshBand() {
+  const html = statusBandHtml(context());
+  const old = screen.querySelector('.band');
+  if (old) old.outerHTML = html;
+  else if (html) screen.querySelector('header')?.insertAdjacentHTML('afterend', html);
 }
 
 // --- actions ----------------------------------------------------------------------------------------------
 const actions = {
   back,
   noop() {},
-  voice() {
-    store.voice = !store.voice;
+  /** Interrupteurs de l'écran Réglages (et haut-parleur du bandeau) : voice | colors | vibration. */
+  toggle(name) {
+    if (!['voice', 'colors', 'vibration'].includes(name)) return;
+    store[name] = !store[name];
     save();
-    if (store.voice) say(makeT(store.lang)('common.voice_on'));
-    else a11y.stop();
     draw();
+    const t = makeT(store.lang);
+    const state = t(store[name] ? 'settings.on' : 'settings.off');
+    if (name === 'voice' && !store.voice) a11y.stop();
+    else say(`${t(`settings.${name}`)} : ${state}`);
+    if (name === 'vibration') a11y.feedback('confirm'); // on le sent tout de suite
   },
   lang(code) {
     store.lang = code;
@@ -182,7 +218,9 @@ const actions = {
   pick,
   'alarm-ok'() {
     overlay.innerHTML = '';
+    stopAlarmFeedback();
     a11y.stop();
+    navigator.vibrate?.(0); // coupe la vibration en cours
   },
   'demo-next'() {
     position.advance();
@@ -194,7 +232,7 @@ document.getElementById('app').addEventListener('click', (event) => {
   if (!el || el.closest('.track')) return; // le carrousel gère ses propres touches
   if (el.dataset.say) say(el.dataset.say); // « parle dès le toucher »
   if (!el.dataset.nav && !el.dataset.act) return;
-  a11y.feedback('tap');
+  if (el.dataset.act !== 'toggle') a11y.feedback('tap'); // les interrupteurs font leur propre retour
   if (el.dataset.nav) {
     const { view, params } = JSON.parse(el.dataset.nav);
     go(view, params);
@@ -235,14 +273,7 @@ async function start() {
   }
   draw();
 
-  // Pour la démo : bouton + touche N pour faire avancer le bus ; ?speed=20 pour l'avance automatique.
-  if (demo) {
-    const button = document.createElement('button');
-    button.className = 'demo';
-    button.dataset.act = 'demo-next';
-    button.textContent = `▶ ${makeT(store.lang)('demo.next')}`;
-    document.getElementById('app').append(button);
-  }
+  // Pour la démo : bandeau « arrêt suivant » (écrans) + touche N pour faire avancer le bus ; ?speed=20 pour l'avance automatique.
   window.addEventListener('keydown', (e) => e.key === 'n' && position?.advance());
 
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {

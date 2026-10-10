@@ -81,5 +81,19 @@
   "alarm.now.title": "Das ist Ihre Haltestelle!",
   "alarm.now.sub": "{stop} — Sie können jetzt aussteigen.",
 
+  "settings.title": "Einstellungen",
+  "settings.sub": "Wählen Sie, was Ihnen hilft.",
+  "settings.open": "Einstellungen",
+  "settings.voice": "Stimme",
+  "settings.colors": "Farben",
+  "settings.vibration": "Vibration",
+  "settings.on": "An",
+  "settings.off": "Aus",
+  "settings.vibration_unsupported": "Dieses Telefon oder dieser Browser kann nicht vibrieren.",
+  "settings.legend": "Was die Farben bedeuten:",
+  "status.calm": "Alles in Ordnung. Bitte warten.",
+  "status.soon": "Machen Sie sich bereit.",
+  "status.now": "Jetzt aussteigen!",
+
   "demo.next": "nächste Haltestelle (Demo)"
 }

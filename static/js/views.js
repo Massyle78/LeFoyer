@@ -1,10 +1,18 @@
-// Écrans (HTML en chaîne). Chaque vue reçoit un contexte `c` :
+﻿// Écrans (HTML en chaîne). Chaque vue reçoit un contexte `c` :
 //   { t, lang, line, stops, count, pos:{next,atStop}, destIndex, voice, languages:[{code,name}], demo }
 // et renvoie du HTML. La navigation et les actions sont décrites par des attributs data-* :
 //   data-say="texte"      dire ce texte dès le toucher
 //   data-nav='{"view":..}' aller à un écran
 //   data-act="nom"        action (voir main.js)
-import { stopStrip, stopsLeft, aheadIndexes } from './logic.js';
+import { stopStrip, stopsLeft, aheadIndexes, tripStatus } from './logic.js';
+
+// Les trois « moments » en couleurs : vert = tout va bien / j'attends, orange = je me prépare / j'ai besoin d'aide,
+// rouge = j'agis maintenant (descendre, urgence). Toujours doublés d'une icône et d'un texte (pas seulement la couleur).
+const STATUS_TONE = { calm: 'ok', soon: 'warn', now: 'stop' };
+const PHRASE_TONE = { hello: 'ok', repeat: 'ok', seat: 'ok', ticket: 'ok', control: 'ok', lost: 'warn', ramp: 'warn', front_door: 'warn', more_time: 'warn', unwell: 'stop' };
+
+const statusOf = (c) => tripStatus({ next: c.pos.next, atStop: c.pos.atStop, dest: c.destIndex });
+const toneOf = (c) => STATUS_TONE[statusOf(c)] ?? '';
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
 const json = (o) => esc(JSON.stringify(o));
@@ -75,7 +83,7 @@ function header(c) {
        <div class="dir"><small>${esc(c.t('common.direction'))}</small><strong>${esc(c.stops.at(-1).name)}</strong></div>`
     : `<div class="num small">Bus</div><div class="dir"><strong>Bus Buddy</strong></div>`;
   return `<header class="top">${left}
-    <button class="voice" type="button" data-act="voice" aria-label="${esc(voice)}" aria-pressed="${c.voice}">
+    <button class="voice" type="button" data-act="toggle" data-arg="voice" aria-label="${esc(voice)}" aria-pressed="${c.voice}">
       <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">${speaker}</svg></button>
   </header>`;
 }
@@ -94,17 +102,46 @@ function footer(c) {
     .map((l) => `<button type="button" class="lang ${l.code === c.lang ? 'active' : ''}" data-act="lang" data-arg="${l.code}"
         ${l.code === c.lang ? 'aria-current="true"' : ''} lang="${l.code}">${esc(l.name)}</button>`)
     .join('');
-  return `<footer class="foot"><span class="flabel">${esc(c.t('common.language'))}</span><div class="langs">${langs}</div></footer>`;
+  return `<footer class="foot">
+    <button class="gear" type="button" data-say="${esc(c.t('settings.title'))}" data-nav='${json({ view: 'settings' })}' aria-label="${esc(c.t('settings.open'))}">${ICONS.gear}</button>
+    <div class="langs" role="group" aria-label="${esc(c.t('common.language'))}">${langs}</div></footer>`;
 }
+
+/** Bande de couleur « où en suis-je ? » (seulement quand un arrêt est choisi). */
+export const statusBandHtml = (c) => statusBand(c);
+function statusBand(c) {
+  const status = statusOf(c);
+  if (!status) return '';
+  const icon = status === 'calm' ? ICONS.ok : status === 'soon' ? ICONS.warn : ico('getting_out');
+  const text = c.t(`status.${status}`);
+  return `<div class="band tone-${STATUS_TONE[status]}" role="status" aria-live="polite"><span class="bico">${icon}</span><span class="btxt">${esc(text)}</span></div>`;
+}
+
+const demoBar = (c) => `<button class="demobar" type="button" data-act="demo-next">▶ ${esc(c.t('demo.next'))}</button>`;
 
 const backButton = (c) => `<button class="back" type="button" data-act="back">
   <svg viewBox="0 0 40 28" width="40" height="28" aria-hidden="true"><path d="M38 14H6M16 3L5 14l11 11" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   <span>${esc(c.t('common.back'))}</span></button>`;
 
 /** Page complète : bandeau, contenu, retour, bulle « répétez doucement », choix de langue. */
-function page(c, content, { back = true, withBubble = true, cls = '' } = {}) {
-  return `${header(c)}<main class="${cls}">${content}</main>${back ? backButton(c) : ''}${withBubble ? bubble(c) : ''}${footer(c)}`;
+function page(c, content, { back = true, withBubble = true, cls = '', action = '' } = {}) {
+  // Tout est dans le flux (bandeau, bande de couleur, contenu qui défile, « dock » retour/action/bulle, langues) :
+  // rien ne se superpose, le contenu ne passe jamais sous un bouton, et l'action principale (ex. « Choisir »)
+  // reste toujours visible, sans avoir à faire défiler.
+  const dock = back || withBubble || action
+    ? `<div class="dock ${withBubble ? 'has-bubble' : ''}">${back ? backButton(c) : ''}${action}${withBubble ? bubble(c) : ''}</div>`
+    : '';
+  return `${header(c)}${statusBand(c)}${c.demo ? demoBar(c) : ''}<main class="${cls}">${content}</main>${dock}${footer(c)}`;
 }
+
+const ICONS = {
+  gear: '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19.4 13.5a7.7 7.7 0 0 0 0-3l2-1.5-2-3.5-2.4.9a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.4a7.6 7.6 0 0 0-2.6 1.5l-2.4-.9-2 3.5 2 1.5a7.7 7.7 0 0 0 0 3l-2 1.5 2 3.5 2.4-.9a7.6 7.6 0 0 0 2.6 1.5l.4 2.4h4l.4-2.4a7.6 7.6 0 0 0 2.6-1.5l2.4.9 2-3.5z"/></svg>',
+  ok: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M6.5 12.5l3.8 3.8 7.2-8" fill="none" stroke="var(--tone)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  warn: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2L22.8 21H1.2z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9v5.5" stroke="var(--tone)" stroke-width="2.8" stroke-linecap="round"/><circle cx="12" cy="17.8" r="1.6" fill="var(--tone)"/></svg>',
+  voice: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  colors: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="c1" cx="8" cy="9" r="5.5"/><circle class="c2" cx="16" cy="9" r="5.5"/><circle class="c3" cx="12" cy="15.5" r="5.5"/></svg>',
+  vibration: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4.5 8v8M1.5 10v4M19.5 8v8M22.5 10v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+};
 
 // --- écrans ---------------------------------------------------------------------------------------
 function myStopBanner(c) {
@@ -112,7 +149,7 @@ function myStopBanner(c) {
   const stop = c.stops[c.destIndex];
   const left = stopsLeft({ next: c.pos.next, atStop: c.pos.atStop, dest: c.destIndex });
   const leftText = leftLabel(c, left);
-  return `<button class="mystop" type="button" data-say="${esc(`${c.t('mystop.title')}: ${stop.name}. ${leftText}`)}"
+  return `<button class="mystop tone-${toneOf(c) || 'ok'}" type="button" data-say="${esc(`${c.t('mystop.title')}: ${stop.name}. ${leftText}`)}"
       data-nav='${json({ view: 'mystop' })}'>
     <span class="mphoto">${stopImage(stop)}</span>
     <span class="mtext"><small>${esc(c.t('mystop.title'))}</small><strong>${esc(stop.name)}</strong><em>${esc(leftText)}</em></span>
@@ -190,9 +227,9 @@ const views = {
           <svg viewBox="0 0 24 24" width="26" height="26"><path d="M15 4l-8 8 8 8" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button class="nav next" type="button" data-act="car-next" aria-label="${esc(c.t('stop.next'))}">
           <svg viewBox="0 0 24 24" width="26" height="26"><path d="M9 4l8 8-8 8" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      </div>
-      <button class="cta" type="button" data-act="pick" data-arg="${need}">${esc(c.t('common.choose'))}</button>`;
-    return page(c, body, { cls: 'picker' });
+      </div>`;
+    const action = `<button class="cta" type="button" data-act="pick" data-arg="${need}">${esc(c.t('common.choose'))}</button>`;
+    return page(c, body, { cls: 'picker', withBubble: false, action });
   },
 
   /** Phrase à montrer / dire aux personnes autour. */
@@ -200,7 +237,7 @@ const views = {
     const stopObj = stop ? c.stops.find((s) => s.id === stop) : null;
     const sentence = c.t(`phrase.${phrase}`, { stop: stopObj?.name ?? '' });
     const photo = stopObj ? `<div class="cstop"><div class="cphoto">${stopImage(stopObj)}</div><strong>${esc(stopObj.name)}</strong></div>` : '';
-    const body = `<section class="card"><div class="cdisc">${ico(icon)}</div>
+    const body = `<section class="card tone-${PHRASE_TONE[phrase] ?? 'ok'}"><div class="cdisc">${ico(icon)}</div>
         <p class="big">${esc(sentence)}</p>${photo}
         <button class="say" type="button" data-say="${esc(sentence)}" data-act="noop">
           <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -216,7 +253,7 @@ const views = {
     const mark = yes
       ? '<svg viewBox="0 0 100 100" class="mark"><circle cx="50" cy="50" r="46"/><path d="M27 52l16 16 31-34" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       : '<svg viewBox="0 0 100 100" class="mark no"><circle cx="50" cy="50" r="46"/><path d="M33 33l34 34M67 33L33 67" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/></svg>';
-    const body = `<section class="card">${mark}<p class="big">${esc(sentence)}</p>
+    const body = `<section class="card tone-${yes ? 'ok' : 'stop'}">${mark}<p class="big">${esc(sentence)}</p>
         <div class="cstop"><div class="cphoto">${stopImage(s)}</div><strong>${esc(s.name)}</strong></div>
         <p class="sub">${esc(c.t('answer.sub', { line: c.line.number, terminus: c.stops.at(-1).name }))}</p>
         <button class="say" type="button" data-say="${esc(sentence)}" data-act="noop">${esc(c.t('common.say_again'))}</button>
@@ -236,9 +273,28 @@ const views = {
         <div class="bphoto">${stopImage(stop)}</div>
         <div class="bpill">${esc(stop.name)}</div>
       </section>
-      <p class="left ${left <= 1 ? 'soon' : ''}">${esc(leftLabel(c, left))}</p>
+      <p class="left">${esc(leftLabel(c, left))}</p>
       ${strip(c)}`;
-    return page(c, body, { cls: 'mystoppage' });
+    return page(c, body, { cls: `mystoppage tone-${toneOf(c) || 'ok'}` });
+  },
+
+  /** Réglages : voix, couleurs, vibration (trois interrupteurs) + légende des couleurs. */
+  settings(c) {
+    const row = (key, label, on, extra = '') => `<button class="setrow" type="button" role="switch" aria-checked="${on}" data-act="toggle" data-arg="${key}">
+        <span class="sico sico-${key}">${ICONS[key]}</span><span class="slabel">${esc(label)}</span>
+        <span class="switch ${on ? 'on' : ''}"><i></i><b>${esc(c.t(on ? 'settings.on' : 'settings.off'))}</b></span></button>${extra}`;
+    const legend = [['ok', 'calm'], ['warn', 'soon'], ['stop', 'now']]
+      .map(([tone, status]) => `<li class="tone-${tone}"><i></i><span>${esc(c.t(`status.${status}`))}</span></li>`)
+      .join('');
+    const body = `${heading(c.t('settings.title'), c.t('settings.sub'))}
+      <div class="setlist">
+        ${row('voice', c.t('settings.voice'), c.voice)}
+        ${row('colors', c.t('settings.colors'), c.colors)}
+        <ul class="legend" aria-label="${esc(c.t('settings.legend'))}">${legend}</ul>
+        ${row('vibration', c.t('settings.vibration'), c.vibration)}
+        ${c.canVibrate ? '' : `<p class="hint warnhint">${esc(c.t('settings.vibration_unsupported'))}</p>`}
+      </div>`;
+    return page(c, body, { withBubble: false, cls: 'settingspage' });
   },
 };
 
@@ -250,7 +306,7 @@ export function renderView(name, params, c) {
 export function alarmHtml(c, phase, stopName) {
   const title = c.t(`alarm.${phase}.title`);
   const sub = c.t(`alarm.${phase}.sub`, { stop: stopName });
-  return `<div class="alarm ${phase}" role="alertdialog" aria-live="assertive" aria-label="${esc(title)}">
+  return `<div class="alarm ${phase} tone-${phase === 'now' ? 'stop' : 'warn'}" role="alertdialog" aria-live="assertive" aria-label="${esc(title)}">
     <div class="adisc">${ico(phase === 'now' ? 'getting_out' : 'bell')}</div>
     <h2>${esc(title)}</h2><p>${esc(sub)}</p>
     <button class="cta light" type="button" data-act="alarm-ok">${esc(c.t('common.ok'))}</button>

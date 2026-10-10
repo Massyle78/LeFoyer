@@ -69,3 +69,13 @@ test('simulated bus runs to the terminus and stops there', () => {
   assert.equal(pos.advance(), false);
   assert.equal(seen[0].atStop, true);
 });
+
+test('trip status: green while waiting, orange when next, red when there', async () => {
+  const { tripStatus } = await import('../static/js/logic.js');
+  assert.equal(tripStatus({ next: 1, atStop: false, dest: 5 }), 'calm');
+  assert.equal(tripStatus({ next: 4, atStop: true, dest: 5 }), 'calm');
+  assert.equal(tripStatus({ next: 5, atStop: false, dest: 5 }), 'soon');
+  assert.equal(tripStatus({ next: 5, atStop: true, dest: 5 }), 'now');
+  assert.equal(tripStatus({ next: 6, atStop: false, dest: 5 }), null);
+  assert.equal(tripStatus({ next: 1, atStop: false, dest: null }), null);
+});

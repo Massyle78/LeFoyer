@@ -5,7 +5,8 @@
 // Les écrans ne parlent qu'à `a11y` : ils n'ont rien à changer.
 //
 //   a11y.speak(text, lang)   dire ce texte à voix haute (touche d'un bouton, phrase à montrer...)
-//   a11y.feedback(kind)      retour sensoriel : "tap" | "alarm"
+//   a11y.feedback(kind)      retour sensoriel : "tap" | "confirm" | "yes" | "no" | "stopped" | "soon" | "arrive"
+//                            (chaque service choisit ce qu'il fait ; la vibration respecte le réglage « Vibration »)
 //   a11y.stop()              couper ce qui est en cours
 import { store } from './store.js';
 
@@ -62,12 +63,32 @@ export const speechService = {
   },
 };
 
-// --- Vibration (Android ; ignorée ailleurs) ------------------------------------------------
+// --- Vibration (Android ; ignorée ailleurs, ex. iPhone) ---------------------------------------
+// Un « langage » de motifs, du plus discret au plus fort, pour savoir ce qui se passe sans regarder :
+//   tap      1 pulsation très courte    je touche un bouton
+//   confirm  2 pulsations courtes       choix enregistré (mon arrêt, une demande)
+//   yes      2 pulsations courtes       « oui, c'est le bon bus »  (vert)
+//   no       1 longue pulsation         « non, ce n'est pas le bon bus »  (rouge)
+//   stopped  1 pulsation moyenne        le bus vient de s'arrêter à un arrêt
+//   soon     2 pulsations moyennes      orange : mon arrêt est le prochain, je me prépare
+//   arrive   3 longues + 1 très longue  rouge : C'EST MON ARRÊT, je descends (répété jusqu'à « OK »)
 export const vibrationService = {
   name: 'vibration',
-  patterns: { tap: 20, alarm: [400, 200, 400, 200, 400] },
+  patterns: {
+    tap: 15,
+    confirm: [70, 60, 70],
+    yes: [70, 60, 70],
+    no: 350,
+    stopped: 120,
+    soon: [250, 150, 250],
+    arrive: [600, 200, 600, 200, 600, 200, 1000],
+  },
+  get available() {
+    return typeof navigator.vibrate === 'function';
+  },
   feedback(kind) {
-    if (navigator.vibrate && this.patterns[kind]) navigator.vibrate(this.patterns[kind]);
+    if (!store.vibration || !this.available || !this.patterns[kind]) return;
+    navigator.vibrate(this.patterns[kind]);
   },
 };
 

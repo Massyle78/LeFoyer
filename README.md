@@ -11,7 +11,7 @@ pip install -r requirements.txt
 python app.py                 # http://localhost:5000
 ```
 
-- `http://localhost:5000/?demo=1` : mode démo (bouton « arrêt suivant » en haut à droite, ou touche **N**, pour faire avancer le bus).
+- `http://localhost:5000/?demo=1` : mode démo (bandeau « arrêt suivant » sous l'en-tête, ou touche **N**, pour faire avancer le bus).
 - `http://localhost:5000/qr` : un **QR code par ligne** (à imprimer et coller dans les bus). Le QR ouvre `/?line=8`.
   Pour qu'un téléphone puisse les scanner, il doit être sur le même Wi-Fi ; l'adresse de l'ordinateur sur le réseau est détectée
   automatiquement. En production : `BUSBUDDY_PUBLIC_URL=https://mon-site.org python app.py`.
@@ -30,7 +30,32 @@ python app.py                 # http://localhost:5000
 5. Bulle « Répétez doucement » (en bas à droite) : *Répétez doucement* / *Une place assise*.
 6. **Mon arrêt** : photo, nombre d'arrêts restants, frise avec « ··· » (au plus 4 repères affichés) ; alarme plein écran
    (« Préparez-vous » puis « C'est votre arrêt ») avec voix, vibration et écran maintenu allumé.
-7. Bouton **retour** partout (et le retour du téléphone fonctionne aussi). Langues en bas : english · français · deutsch · italiano.
+7. Bouton **retour** partout (et le retour du téléphone fonctionne aussi). En bas : **⚙ Réglages** puis les langues (english · français · deutsch · italiano).
+
+## Couleurs et vibrations
+
+Trois moments, toujours doublés d'une icône et d'un texte (la couleur n'est jamais la seule information) :
+
+| Couleur | Sens | Exemples |
+|---|---|---|
+| **Vert** | tout va bien, j'attends | bande « Tout va bien. Patientez. » · « oui, ce bus va à… » · phrases polies (bonjour, billet, place assise…) |
+| **Orange** | je me prépare / j'ai besoin d'aide | « Préparez-vous » (mon arrêt est le prochain) · rampe, porte avant, plus de temps, je suis perdu(e) |
+| **Rouge** | j'agis maintenant | « Descendez maintenant ! » (alarme rouge qui pulse) · « non, ce n'est pas le bon bus » · je ne me sens pas bien |
+
+La bande de couleur apparaît sous le bandeau dès qu'un arrêt est choisi ; la bordure du bloc « Mon arrêt » suit la même couleur.
+
+**Écran Réglages (⚙)** : trois interrupteurs mémorisés sur le téléphone — **Voix**, **Couleurs** (coupées : tout redevient violet) et **Vibration** (remise en marche : petit essai). Le haut-parleur du bandeau coupe/rétablit la voix rapidement.
+
+| Vibration | Moment |
+|---|---|
+| 1 très courte | je touche un bouton |
+| 2 courtes | choix enregistré (mon arrêt, une demande) · « oui, bon bus » |
+| 1 longue | « non, ce n'est pas le bon bus » |
+| 1 moyenne | le bus vient de s'arrêter à un arrêt (quand j'ai choisi mon arrêt) |
+| 2 moyennes | **orange** : mon arrêt est le prochain |
+| 3 longues + 1 très longue | **rouge : c'est mon arrêt** — recommence toutes les 6 s jusqu'à ce qu'on touche « OK » |
+
+Les motifs sont dans `static/js/a11y.js` (`vibrationService.patterns`). La vibration web fonctionne sur Android (Chrome, Firefox) ; **pas sur iPhone** (Safari ne l'autorise pas) : l'écran Réglages l'indique.
 
 ## Où modifier / étendre
 

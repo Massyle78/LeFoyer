@@ -81,5 +81,19 @@
   "alarm.now.title": "This is your stop !",
   "alarm.now.sub": "{stop} — you can get off now.",
 
+  "settings.title": "Settings",
+  "settings.sub": "Choose what helps you.",
+  "settings.open": "Settings",
+  "settings.voice": "Voice",
+  "settings.colors": "Colours",
+  "settings.vibration": "Vibration",
+  "settings.on": "On",
+  "settings.off": "Off",
+  "settings.vibration_unsupported": "This phone or browser cannot vibrate.",
+  "settings.legend": "What the colours mean:",
+  "status.calm": "All is well. Just wait.",
+  "status.soon": "Get ready.",
+  "status.now": "Get off now !",
+
   "demo.next": "next stop (demo)"
 }

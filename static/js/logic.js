@@ -44,6 +44,19 @@ export function alarmPhase({ next, atStop, dest }) {
   return null;
 }
 
+/**
+ * « Où en suis-je ? » en trois moments, pour les couleurs :
+ *   'calm' (vert : tout va bien, j'attends) · 'soon' (orange : mon arrêt est le prochain, je me prépare) ·
+ *   'now' (rouge : j'y suis, je descends). null : pas d'arrêt choisi, ou arrêt déjà dépassé.
+ */
+export function tripStatus({ next, atStop, dest }) {
+  const phase = alarmPhase({ next, atStop, dest });
+  if (phase === 'now') return 'now';
+  if (phase === 'approaching') return 'soon';
+  if (phase === null && dest !== null && dest !== undefined) return 'calm';
+  return null;
+}
+
 /** Index des arrêts encore devant le bus (ceux qu'on peut demander / où l'on peut descendre). */
 export function aheadIndexes({ count, next, atStop }) {
   const out = [];

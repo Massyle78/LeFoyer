@@ -81,5 +81,19 @@
   "alarm.now.title": "C'est votre arrêt !",
   "alarm.now.sub": "{stop} — vous pouvez descendre.",
 
+  "settings.title": "Réglages",
+  "settings.sub": "Choisissez ce qui vous aide.",
+  "settings.open": "Réglages",
+  "settings.voice": "Voix",
+  "settings.colors": "Couleurs",
+  "settings.vibration": "Vibration",
+  "settings.on": "Oui",
+  "settings.off": "Non",
+  "settings.vibration_unsupported": "Ce téléphone ou ce navigateur ne peut pas vibrer.",
+  "settings.legend": "Ce que veulent dire les couleurs :",
+  "status.calm": "Tout va bien. Patientez.",
+  "status.soon": "Préparez-vous.",
+  "status.now": "Descendez maintenant !",
+
   "demo.next": "arrêt suivant (démo)"
 }

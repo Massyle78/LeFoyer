@@ -81,5 +81,19 @@
   "alarm.now.title": "Questa è la tua fermata!",
   "alarm.now.sub": "{stop} — puoi scendere adesso.",
 
+  "settings.title": "Impostazioni",
+  "settings.sub": "Scegli cosa ti aiuta.",
+  "settings.open": "Impostazioni",
+  "settings.voice": "Voce",
+  "settings.colors": "Colori",
+  "settings.vibration": "Vibrazione",
+  "settings.on": "Sì",
+  "settings.off": "No",
+  "settings.vibration_unsupported": "Questo telefono o browser non può vibrare.",
+  "settings.legend": "Cosa significano i colori:",
+  "status.calm": "Va tutto bene. Aspetta.",
+  "status.soon": "Preparati.",
+  "status.now": "Scendi adesso!",
+
   "demo.next": "prossima fermata (demo)"
 }

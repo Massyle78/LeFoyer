@@ -3,7 +3,8 @@
 const KEY = 'busbuddy.v2';
 export const LANGS = ['en', 'fr', 'de', 'it'];
 
-const defaults = { lang: null, line: null, dest: null, voice: true };
+// voice / colors / vibration : réglages de l'écran « Réglages » (tous activés par défaut)
+const defaults = { lang: null, line: null, dest: null, voice: true, colors: true, vibration: true };
 
 function read() {
   try {
@@ -32,7 +33,7 @@ export const speedSeconds = Number(params.get('speed') ?? (demo ? 0 : 30));
 
 export function save() {
   try {
-    localStorage.setItem(KEY, JSON.stringify({ lang: store.lang, line: store.line, dest: store.dest, voice: store.voice }));
+    localStorage.setItem(KEY, JSON.stringify(store));
   } catch {
     /* mode privé : on continue sans mémoire */
   }
