@@ -1,13 +1,15 @@
 // Bus Buddy (web app) — tout se passe sur le téléphone : aucune communication avec le conducteur.
 import { a11y, register, speechService, vibrationService, wakeLockService } from './a11y.js';
-import { goesTo, alarmPhase } from './logic.js';
+import { createDemo } from './demo.js';
+import { goesTo, alarmPhase, lineFromQr } from './logic.js';
 import { languageName, loadLanguages, makeT, speechLang } from './i18n.js';
 import { SimulatedPosition } from './position.js';
-import { LANGS, demo, params, save, speedSeconds, store } from './store.js';
-import { alarmHtml, renderView, statusBandHtml } from './views.js';
+import { LANGS, demo, demoAutostart, demoLoop, demoSpeed, manual, params, save, speedSeconds, store } from './store.js';
+import { alarmHtml, demoCaptionHtml, demoStartHtml, renderView, statusBandHtml } from './views.js';
 
 const screen = document.getElementById('screen');
 const overlay = document.getElementById('overlay');
+const captionBar = document.getElementById('democap');
 
 let allLines = [];
 let line = null;
@@ -32,7 +34,9 @@ function context() {
     colors: store.colors,
     vibration: store.vibration,
     canVibrate: vibrationService.available,
-    demo,
+    canScan: canScanQr(),
+    manual,
+    demoCaption: demoCaptionKey ? t(demoCaptionKey) : '',
     languages: LANGS.map((code) => ({ code, name: languageName(code) })),
   };
 }
@@ -58,7 +62,10 @@ window.addEventListener('popstate', draw);
 
 // --- affichage ---------------------------------------------------------------------------------------
 function draw() {
-  const { view, params } = current();
+  const state = current();
+  const { params } = state;
+  // Sans bus choisi, seul le choix de la ligne (et les réglages) a un sens, même si l'historique propose autre chose.
+  const view = !line && !['lines', 'settings'].includes(state.view) ? 'lines' : state.view;
   const c = context();
   document.documentElement.lang = store.lang;
   document.documentElement.classList.toggle('no-colors', !store.colors); // réglage « Couleurs »
@@ -68,6 +75,104 @@ function draw() {
   const main = screen.querySelector('main');
   if (main && keepScroll) main.scrollTop = keepScroll;
   if (view === 'picker') initCarousel(c);
+  if (view === 'scan') startScanner();
+  else stopScanner();
+  refreshCaption();
+}
+
+// --- choix du bus par QR code : scanner intégré (Chrome Android...) ; sinon l'appareil photo du téléphone ouvre l'adresse du QR ---
+const canScanQr = () => window.isSecureContext && 'BarcodeDetector' in window && !!navigator.mediaDevices?.getUserMedia;
+let scanStream = null;
+let scanTimer = null;
+
+function stopScanner() {
+  clearInterval(scanTimer);
+  scanTimer = null;
+  scanStream?.getTracks().forEach((track) => track.stop());
+  scanStream = null;
+}
+
+async function startScanner() {
+  stopScanner();
+  const video = screen.querySelector('#scanvideo');
+  const message = screen.querySelector('#scanmsg');
+  const t = makeT(store.lang);
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    if (screen.dataset.view !== 'scan') return stream.getTracks().forEach((track) => track.stop()); // parti entre-temps
+    scanStream = stream;
+    video.srcObject = stream;
+    await video.play();
+    const detector = new BarcodeDetector({ formats: ['qr_code'] });
+    scanTimer = setInterval(async () => {
+      try {
+        const codes = await detector.detect(video);
+        if (!codes.length) return;
+        const number = lineFromQr(codes[0].rawValue, allLines.map((l) => l.number));
+        if (number) {
+          a11y.feedback('confirm');
+          actions.line(number);
+        } else {
+          message.textContent = t('scan.unknown');
+        }
+      } catch {
+        /* image pas prête : on réessaie */
+      }
+    }, 300);
+  } catch {
+    message.textContent = t('scan.denied');
+  }
+}
+
+// --- démo automatique (?demo=x) -----------------------------------------------------------------------
+let demoRun = null;
+let demoCaptionKey = null;
+
+function refreshCaption() {
+  captionBar.hidden = !demoRun;
+  if (demoRun) captionBar.innerHTML = demoCaptionHtml(context());
+}
+
+const demoApi = {
+  caption(key) {
+    demoCaptionKey = key;
+    refreshCaption();
+  },
+  view: () => screen.dataset.view,
+  advanceBus: () => position?.advance(),
+  lang: () => store.lang,
+  reset: () => leaveLine(),
+};
+
+function startDemo() {
+  overlay.innerHTML = '';
+  demoRun = createDemo({ speed: demoSpeed, loop: demoLoop, api: demoApi });
+  refreshCaption();
+  demoRun.start();
+}
+
+function stopDemo() {
+  demoRun?.stop();
+  demoRun = null;
+  demoCaptionKey = null;
+  refreshCaption();
+}
+
+// --- changer de bus : retour au choix de la ligne -------------------------------------------------------
+function leaveLine() {
+  stopAlarmFeedback();
+  overlay.innerHTML = '';
+  position?.stop();
+  position = null;
+  line = null;
+  store.line = null;
+  store.dest = null;
+  save();
+  const url = new URL(location.href);
+  url.searchParams.delete('line');
+  url.hash = '#/lines';
+  history.replaceState({ view: 'lines', params: {}, depth: 0 }, '', url);
+  draw();
 }
 
 // --- carrousel d'arrêts : un arrêt à la fois, les voisins en transparence ---------------------------
@@ -211,10 +316,18 @@ const actions = {
     say(languageName(code), code); // il dit le nom de la langue, dans cette langue
   },
   line(number) {
+    stopScanner();
     chooseLine(number);
-    history.replaceState({ view: 'home', params: {}, depth: 0 }, '', '#/home');
+    // L'adresse garde le bus choisi (?line=8) : recharger la page reprend le trajet, comme le QR code du bus.
+    const url = new URL(location.href);
+    url.searchParams.set('line', number);
+    url.hash = '#/home';
+    history.replaceState({ view: 'home', params: {}, depth: 0 }, '', url);
     draw();
   },
+  'change-line': leaveLine,
+  'demo-start': startDemo,
+  'demo-stop': stopDemo,
   pick,
   'alarm-ok'() {
     overlay.innerHTML = '';
@@ -223,7 +336,7 @@ const actions = {
     navigator.vibrate?.(0); // coupe la vibration en cours
   },
   'demo-next'() {
-    position.advance();
+    position?.advance();
   },
 };
 
@@ -262,8 +375,13 @@ async function start() {
   register(wakeLockService);
   speechService.init();
   wakeLockService.init();
-  chooseLine(store.line);
-  if (!line) store.line = null;
+  // Page d'accueil = choix du bus. Un QR code (…/?line=8) y répond d'avance et ouvre directement le bus ;
+  // sans QR code, on choisit la ligne dans la liste (ou avec le scanner intégré).
+  chooseLine(params.get('line'));
+  if (!line) {
+    store.line = null;
+    store.dest = null;
+  }
   if (!history.state) history.replaceState({ view: line ? 'home' : 'lines', params: {}, depth: 0 }, '', `#/${line ? 'home' : 'lines'}`);
   // Aperçu / captures d'écran : ?view=picker&p={"need":"ramp"} ouvre directement un écran.
   if (line && params.get('dest') && line.stops.some((s) => s.id === params.get('dest'))) setDestination(params.get('dest'));
@@ -273,7 +391,12 @@ async function start() {
   }
   draw();
 
-  // Pour la démo : bandeau « arrêt suivant » (écrans) + touche N pour faire avancer le bus ; ?speed=20 pour l'avance automatique.
+  // Démo automatique (?demo=2) : un écran de départ (un toucher autorise la voix et la vibration), ou &autostart=1.
+  if (demo) {
+    if (demoAutostart) startDemo();
+    else overlay.innerHTML = demoStartHtml(context(), demoSpeed);
+  }
+  // Démo à la main (?manual=1) : bandeau « arrêt suivant » + touche N pour faire avancer le bus ; ?speed=20 pour l'avance automatique.
   window.addEventListener('keydown', (e) => e.key === 'n' && position?.advance());
 
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {

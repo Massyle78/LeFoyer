@@ -68,3 +68,28 @@ export function aheadIndexes({ count, next, atStop }) {
 export function goesTo({ count, next, atStop }, stopIndex) {
   return aheadIndexes({ count, next, atStop }).includes(stopIndex);
 }
+
+/**
+ * ?demo=x : x = vitesse de la démo automatique. Absent / 0 / false = pas de démo ; 1 = vitesse normale ;
+ * 2 = deux fois plus vite... (borné entre 0,5 et 8). Une valeur non numérique (ex. demo=true) vaut 1.
+ */
+export function parseDemo(raw) {
+  if (raw === null || raw === undefined) return 0;
+  const text = String(raw).trim().toLowerCase();
+  if (text === '' || text === '0' || text === 'false' || text === 'off') return 0;
+  const n = Number(text.replace(',', '.'));
+  if (!Number.isFinite(n)) return 1;
+  return n <= 0 ? 0 : Math.min(8, Math.max(0.5, n));
+}
+
+/** Numéro de ligne contenu dans un QR code : une adresse « …/?line=8 » ou simplement « 8 ». null si inconnu. */
+export function lineFromQr(raw, knownNumbers) {
+  const text = String(raw ?? '').trim();
+  let candidate = text;
+  try {
+    candidate = new URL(text).searchParams.get('line') ?? '';
+  } catch {
+    /* pas une adresse : on essaie le texte brut */
+  }
+  return knownNumbers.includes(candidate) ? candidate : null;
+}

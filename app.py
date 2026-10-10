@@ -141,7 +141,7 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=5000)
     parser.add_argument("--host", default="0.0.0.0")
     args = parser.parse_args()
-    print(f"\n  Bus Buddy\n  sur cet ordinateur : http://localhost:{args.port}/?demo=1"
+    print(f"\n  Bus Buddy\n  sur cet ordinateur : http://localhost:{args.port}/   (démo auto : /?demo=2)"
           f"\n  sur le téléphone   : http://{lan_ip()}:{args.port}/   (même Wi-Fi)"
           f"\n  QR codes à scanner : http://localhost:{args.port}/qr\n")
     app.run(host=args.host, port=args.port)

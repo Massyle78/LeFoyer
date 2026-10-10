@@ -79,3 +79,26 @@ test('trip status: green while waiting, orange when next, red when there', async
   assert.equal(tripStatus({ next: 6, atStop: false, dest: 5 }), null);
   assert.equal(tripStatus({ next: 1, atStop: false, dest: null }), null);
 });
+
+test('demo=x parameter: speed of the automatic demo', async () => {
+  const { parseDemo } = await import('../static/js/logic.js');
+  assert.equal(parseDemo(null), 0);
+  assert.equal(parseDemo('0'), 0);
+  assert.equal(parseDemo('false'), 0);
+  assert.equal(parseDemo('1'), 1);
+  assert.equal(parseDemo('2'), 2);
+  assert.equal(parseDemo('1,5'), 1.5);
+  assert.equal(parseDemo('true'), 1);
+  assert.equal(parseDemo('100'), 8);
+  assert.equal(parseDemo('0.1'), 0.5);
+});
+
+test('QR code content -> line number', async () => {
+  const { lineFromQr } = await import('../static/js/logic.js');
+  const known = ['8', '123'];
+  assert.equal(lineFromQr('https://massyle78.github.io/LeFoyer/?line=8', known), '8');
+  assert.equal(lineFromQr('http://192.168.1.5:5000/?line=123&lang=fr', known), '123');
+  assert.equal(lineFromQr(' 8 ', known), '8');
+  assert.equal(lineFromQr('https://example.org/?line=999', known), null);
+  assert.equal(lineFromQr('hello', known), null);
+});

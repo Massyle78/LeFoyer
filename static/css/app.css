@@ -31,15 +31,16 @@ html, body { margin: 0; height: 100%; background: var(--violet); font-family: va
 button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; touch-action: manipulation; }
 button:focus-visible { outline: 4px solid var(--violet-2); outline-offset: 3px; }
 
-#app { position: relative; max-width: 480px; margin: 0 auto; height: 100dvh; background: var(--pink); overflow: hidden; }
-#screen { display: flex; flex-direction: column; height: 100%; }
+#app { position: relative; max-width: 480px; margin: 0 auto; height: 100dvh; background: var(--pink); overflow: hidden; display: flex; flex-direction: column; }
+#screen { display: flex; flex-direction: column; flex: 1; min-height: 0; position: relative; }
 
 /* --- bandeau : numéro de ligne + direction ------------------------------------------------- */
 .top { background: var(--violet); color: #fff; display: flex; align-items: center; gap: calc(var(--u) * 34);
   padding: calc(var(--u) * 18) calc(var(--u) * 36) calc(var(--u) * 20); min-height: calc(var(--u) * 136); flex: none; }
-.num { font-size: calc(var(--u) * 112); font-weight: 700; line-height: .9; letter-spacing: -.02em; }
+.busid { display: flex; align-items: center; gap: calc(var(--u) * 34); flex: 1; min-width: 0; text-align: left; color: inherit; border-radius: 16px; }
+.num { display: block; font-size: calc(var(--u) * 112); font-weight: 700; line-height: .9; letter-spacing: -.02em; }
 .num.small { font-size: calc(var(--u) * 64); }
-.dir { flex: 1; min-width: 0; }
+.dir { display: block; flex: 1; min-width: 0; }
 .dir small { display: block; font-size: calc(var(--u) * 32); line-height: 1.1; }
 .dir strong { display: block; font-size: calc(var(--u) * 58); font-weight: 400; text-transform: uppercase; line-height: 1.04;
   overflow-wrap: anywhere; }
@@ -233,7 +234,35 @@ h1 { font-family: var(--serif); font-weight: 500; color: var(--violet); font-siz
 @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,.6); } 50% { transform: scale(1.06); box-shadow: 0 0 0 calc(var(--u) * 30) rgba(255,255,255,0); } }
 @media (max-height: 760px) { .alarm .adisc { width: calc(var(--u) * 220); } .alarm { gap: calc(var(--u) * 18); padding-block: calc(var(--u) * 30); } }
 
-/* --- mode démo : bandeau « arrêt suivant » dans le flux ----------------------------------------------------------------------- */
+/* --- choix du bus (page d'accueil) : scanner de QR code / liste ---------------------------------------------------------------- */
+.scanbtn { display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 28); width: 100%; min-height: calc(var(--u) * 150); margin-bottom: calc(var(--u) * 30);
+  background: var(--violet); color: #fff; border-radius: 999px; font-weight: 800; font-size: max(18px, calc(var(--u) * 48)); padding: 8px 24px; }
+.scanbtn .qricon { flex: none; width: max(30px, calc(var(--u) * 70)); height: max(30px, calc(var(--u) * 70)); }
+.qrhint { display: flex; align-items: center; gap: calc(var(--u) * 24); margin: 0 0 calc(var(--u) * 30); padding: calc(var(--u) * 24) calc(var(--u) * 32);
+  background: var(--violet-3, #fff); border: 2px dashed var(--violet); border-radius: calc(var(--u) * 36); color: var(--violet); font-weight: 700; font-size: max(15px, calc(var(--u) * 38)); }
+.qrhint .qricon { flex: none; width: max(32px, calc(var(--u) * 80)); height: max(32px, calc(var(--u) * 80)); }
+.rows { display: flex; flex-direction: column; gap: calc(var(--u) * 24); }
+.scanbox { position: relative; width: 100%; aspect-ratio: 1; background: #000; border-radius: calc(var(--u) * 46); overflow: hidden; }
+.scanbox video { width: 100%; height: 100%; object-fit: cover; }
+.scanframe { position: absolute; inset: 16%; border: 5px solid #fff; border-radius: 24px; box-shadow: 0 0 0 100vmax rgba(0,0,0,.35); pointer-events: none; }
+.scanmsg { text-align: center; font-weight: 700; min-height: 1.4em; }
+.chev { flex: none; font-size: 32px; font-weight: 700; line-height: 1; color: var(--violet); }
+
+/* --- démo automatique (?demo=x) : bandeau de légende au-dessus de tout, écran de départ, mise en valeur du bouton touché ------------ */
+.democap { position: relative; z-index: 25; flex: none; display: flex; align-items: center; gap: 8px; background: var(--ink, #1b1340); color: #fff; padding: 6px 8px 6px 14px; min-height: 44px; }
+.democap[hidden] { display: none; }
+.capt { flex: 1; min-width: 0; font-weight: 700; font-size: 15px; line-height: 1.25; }
+.capstop { flex: none; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.18); color: #fff; font-size: 20px; font-weight: 800; }
+.demostart { position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 30);
+  padding: calc(var(--u) * 60); text-align: center; background: var(--pink); overflow-y: auto; }
+.demostart .dsbrand { flex: none; }
+.demostart h2 { font-family: var(--serif); font-size: max(40px, calc(var(--u) * 100)); margin: 0; color: var(--violet); }
+.demostart p { margin: 0; font-size: max(17px, calc(var(--u) * 42)); max-width: 28em; }
+.demostart .cta { width: auto; padding-inline: calc(var(--u) * 80); }
+.demo-hl { outline: 6px solid #FFC83D; outline-offset: 4px; animation: hl 0.7s ease-in-out infinite alternate; }
+@keyframes hl { from { box-shadow: 0 0 0 0 rgba(255,200,61,.7); } to { box-shadow: 0 0 0 14px rgba(255,200,61,0); } }
+
+/* --- mode manuel (?manual=1) : bandeau « arrêt suivant » dans le flux ----------------------------------------------------------------------- */
 .demobar { flex: none; background: var(--violet-2); color: #fff; font-weight: 700; font-size: 13px; min-height: 36px; padding: 6px 12px; text-align: center; }
 
 @media (prefers-reduced-motion: reduce) { .track { scroll-behavior: auto; } .alarm.now .adisc { animation: none; } }

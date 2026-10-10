@@ -11,17 +11,35 @@ pip install -r requirements.txt
 python app.py                 # http://localhost:5000
 ```
 
-- `http://localhost:5000/?demo=1` : mode démo (bandeau « arrêt suivant » sous l'en-tête, ou touche **N**, pour faire avancer le bus).
+- `http://localhost:5000/` : la **page d'accueil est le choix du bus** (scanner le QR code du bus, ou choisir sa ligne dans la liste).
+- `http://localhost:5000/?demo=2` : **démo automatique** (voir ci-dessous).
+- `http://localhost:5000/?manual=1` : démo à la main (bandeau « arrêt suivant » sous l'en-tête, ou touche **N**, pour faire avancer le bus).
 - `http://localhost:5000/qr` : un **QR code par ligne** (à imprimer et coller dans les bus). Le QR ouvre `/?line=8`.
   Pour qu'un téléphone puisse les scanner, il doit être sur le même Wi-Fi ; l'adresse de l'ordinateur sur le réseau est détectée
   automatiquement. En production : `BUSBUDDY_PUBLIC_URL=https://mon-site.org python app.py`.
-- Paramètres d'adresse : `?line=8` · `?lang=fr|en|de|it` · `?demo=1` · `?speed=20` (le bus avance tout seul toutes les 20 s).
+- Paramètres d'adresse : `?line=8` (ouvre directement ce bus, c'est le QR code) · `?lang=fr|en|de|it` · `?demo=x` · `&autostart=1` · `&loop=1` ·
+  `?manual=1` · `?speed=20` (le bus avance tout seul toutes les 20 s).
 - `/preview?q=lang%3Dfr%26line%3D8&q=...&scale=0.66` : plusieurs écrans côte à côte en taille téléphone (outil de développement ;
   `?view=help`, `?view=picker&p={"need":"ramp"}`, `&dest=lac` ouvrent directement un écran).
 
+## Démo automatique : `?demo=x`
+
+`x` est la **vitesse** : `?demo=1` normale (environ 3 min), `?demo=2` deux fois plus vite, `?demo=4` en moins d'une minute (de 0,5 à 8).
+Un écran de départ demande un toucher (nécessaire pour que le navigateur autorise la voix et la vibration), puis l'application
+« touche » elle-même les vrais boutons, avec une mise en évidence jaune et un bandeau noir qui explique ce qui est montré :
+choix de la ligne · tout parle dès le toucher · bon / mauvais bus (vert / rouge) · aide pour descendre (orange) et urgence (rouge) ·
+« répétez doucement » · rappel de mon arrêt avec alarmes orange puis rouge et vibrations · réglages · changement de langue.
+La croix du bandeau l'arrête à tout moment.
+
+- `&autostart=1` : démarre sans l'écran de départ (voix et vibration peuvent alors être bloquées par le navigateur) ;
+- `&loop=1` : rejoue la démo en boucle (stand, salon…) ;
+- exemple : `/?demo=2&lang=fr&loop=1`.
+
 ## Parcours
 
-1. Scan du QR du bus → l'app s'ouvre sur la ligne (sinon, liste des lignes).
+1. **Page d'accueil = choix du bus** : scan du QR du bus (appareil photo du téléphone : le QR ouvre `/?line=8` et l'app s'ouvre
+   directement sur la ligne ; ou bouton **Scanner le QR code** intégré quand le navigateur sait lire les QR codes, en HTTPS ou sur
+   `localhost`), ou choix de la ligne dans la liste. Le numéro de ligne en haut (ou Réglages › Changer de bus) ramène à ce choix.
 2. Accueil : **Dire bonjour**, **Vérifier la destination du bus**, **Acheter un billet**, **Aide**.
 3. Un toucher sur une tuile **le dit à voix haute** puis ouvre la catégorie. Les choix d'arrêts se font dans un carrousel
    horizontal (un arrêt à la fois, voisins en transparence ; le nom est dit quand il arrive au centre).
@@ -74,12 +92,13 @@ Les motifs sont dans `static/js/a11y.js` (`vibrationService.patterns`). La vibra
 node --test tests/                                   # logique pure (frise « ··· », alarme, arrêts restants)
 python -m unittest discover -s tests -p "test_*.py"  # serveur, QR codes, langues complètes
 ```
-`tools/flow_test.js` est un parcours complet (carrousel, retour, aide, alarme, langue) à exécuter dans la console du navigateur sur `/?line=8&demo=1&speed=0`.
+`tools/flow_test.js` est un parcours complet (carrousel, retour, aide, alarme, langue) à exécuter dans la console du navigateur sur `/?lang=en&manual=1` (après `localStorage.clear()`). La démo automatique (`?demo=x`) joue un parcours équivalent toute seule.
 
 ## Limites connues / points ouverts
 
 - Une web app **ne peut pas sonner de façon fiable en arrière-plan** : l'alarme fonctionne tant que l'app est ouverte (écran maintenu allumé grâce à Wake Lock).
 - Le mode hors-ligne (service worker) exige HTTPS (ou `localhost`) ; en HTTP sur une adresse locale l'app fonctionne mais sans cache hors-ligne.
+- Le scanner de QR code intégré dépend du navigateur (BarcodeDetector : Chrome Android surtout) et demande HTTPS ; sinon, utiliser l'appareil photo du téléphone.
 - La position du bus est **simulée** (pas de GPS ni de flux temps réel).
 - Traductions allemand / italien non relues ; icônes et photos d'arrêts issues de la charte / de photos provisoires.
 - La synthèse vocale dépend des voix installées sur le téléphone.

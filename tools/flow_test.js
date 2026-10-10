@@ -1,5 +1,7 @@
-// Parcours complet à exécuter dans la console du navigateur sur /?line=8&lang=en&demo=1&speed=0 (écran d'accueil, sans arrêt choisi).
-// Vérifie : carrousel, retour, aide, rappel d'arrêt, bande verte/orange/rouge, alarmes, vibrations, réglages, langue.
+// Parcours complet à exécuter dans la console du navigateur sur /?lang=en&manual=1 (après localStorage.clear()) :
+// la page d'accueil est le choix de la ligne ; ?manual=1 ajoute le bandeau « arrêt suivant » pour avancer le bus à la main.
+// (La démo automatique, elle, se lance avec ?demo=x.)
+// Vérifie : choix de la ligne, changement de bus, carrousel, retour, aide, rappel d'arrêt, bande verte/orange/rouge, alarmes, vibrations, réglages, langue.
 (async () => {
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const out = [];
@@ -7,6 +9,14 @@
   const view = () => document.getElementById('screen').dataset.view;
   const click = async (selector, ms = 300) => { document.querySelector(selector).click(); await wait(ms); };
   const bg = (el) => getComputedStyle(el).backgroundColor;
+  const activeCard = () => [...document.querySelectorAll('.scard')].findIndex((c) => c.classList.contains('active'));
+  // le défilement doux du carrousel est plus ou moins lent selon le navigateur : on attend que l'arrêt actif change vraiment
+  const carousel = async (selector, delta) => {
+    const target = Math.max(activeCard(), 0) + delta; // aucun repère « actif » tant que le carrousel n'a pas défilé : on part du 1er arrêt
+    document.querySelector(selector).click();
+    for (let i = 0; i < 40 && activeCard() !== target; i++) await wait(100);
+    await wait(150);
+  };
   const spoken = [];
   const vib = [];
   const synth = window.speechSynthesis;
@@ -16,19 +26,25 @@
   const settings = () => JSON.parse(localStorage.getItem('busbuddy.v2'));
   try {
     await wait(500);
-    check('accueil', view() === 'home', view());
+    // Page d'accueil = choix du bus (sans ?line=)
+    check('accueil = choix de la ligne', view() === 'lines', view());
+    check('liste des lignes', document.querySelectorAll('.row').length >= 2, String(document.querySelectorAll('.row').length));
+    check('QR : bouton scanner ou indication', !!document.querySelector('.scanbtn, .qrhint'));
+    await click('[data-act="line"][data-arg="8"]', 500);
+    check('ligne choisie -> accueil du bus', view() === 'home' && /line=8/.test(location.search), view() + location.search);
     check('pas de bande de couleur sans arrêt choisi', !document.querySelector('.band'));
+    check('démo manuelle : bandeau « arrêt suivant »', !!document.querySelector('.demobar'));
 
     // Vérifier la destination du bus : carrousel, réponse verte
     await click('[data-nav*="picker"][data-nav*="check"]');
     const cards = [...document.querySelectorAll('.scard')];
     check('7 arrêts dans le carrousel', cards.length === 7, String(cards.length));
-    await click('[data-act="car-next"]', 900);
+    await carousel('[data-act="car-next"]', 1);
     check('suivant -> 2e actif', cards[1].classList.contains('active'));
     check('nom prononcé', spoken.some((s) => /Parc/.test(s)), JSON.stringify(spoken));
-    await click('[data-act="car-prev"]', 900);
+    await carousel('[data-act="car-prev"]', -1);
     check('précédent -> 1er actif', cards[0].classList.contains('active'));
-    for (let i = 0; i < 6; i++) await click('[data-act="car-next"]', 500);
+    for (let i = 0; i < 6; i++) await carousel('[data-act="car-next"]', 1);
     vib.length = 0;
     await click('.cta');
     check('réponse "oui" (verte)', view() === 'answer' && !!document.querySelector('.card.tone-ok') && /yes/i.test(document.querySelector('.big').textContent));
@@ -50,7 +66,7 @@
     await click('[data-nav*="help"]', 200);
     await click('[data-nav*="out"]', 200);
     await click('[data-nav*="remind"]');
-    for (let i = 0; i < 5; i++) await click('[data-act="car-next"]', 500);
+    for (let i = 0; i < 5; i++) await carousel('[data-act="car-next"]', 1);
     await click('.cta');
     check('mon arrêt', view() === 'mystop', view());
     const band = () => document.querySelector('.band');
@@ -85,6 +101,10 @@
     // Langue
     await click('.lang[data-arg="fr"]');
     check('français', /Réglages/.test(document.getElementById('screen').textContent), document.documentElement.lang);
+
+    // Changer de bus : retour au choix de la ligne
+    await click('.busid', 400);
+    check('changer de bus -> choix de la ligne', view() === 'lines' && !/line=/.test(location.search) && settings().line === null, view() + location.search);
   } catch (e) {
     out.push(`EXC ${e.message}`);
   }
