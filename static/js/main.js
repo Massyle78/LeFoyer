@@ -55,7 +55,12 @@ function go(view, params = {}, { replace = false } = {}) {
 }
 
 function back() {
-  if (current().depth > 0) history.back();
+  if (demoRun) {
+    // Pendant la démo automatique, les clics sont simulés : Chrome ignore alors les anciennes entrées d'historique au
+    // « retour » et ferait sortir de l'appli. On revient donc directement à l'accueil du bus.
+    history.replaceState({ view: 'home', params: {}, depth: 0 }, '', '#/home');
+    draw();
+  } else if (current().depth > 0) history.back();
 }
 
 window.addEventListener('popstate', draw);
@@ -183,7 +188,24 @@ function initCarousel(c) {
   const mark = (i) => cards.forEach((card, k) => card.classList.toggle('active', k === i));
   const scrollTo = (i, behavior = 'smooth') => {
     const card = cards[i];
+    const before = track.scrollLeft;
     track.scrollTo({ left: card.offsetLeft + card.offsetWidth / 2 - track.clientWidth / 2, behavior });
+    // Filet de sécurité : certains navigateurs abandonnent parfois le défilement doux (rien n'a bougé) ; on saute alors à l'arrêt.
+    if (behavior === 'smooth') {
+      setTimeout(() => {
+        if (track.isConnected && nearest() !== i && Math.abs(track.scrollLeft - before) < 2) {
+          scrollTo(i, 'instant');
+          setActive(i); // sans image affichée, l'événement « scroll » n'arrive pas : on met l'arrêt à jour nous-mêmes
+        }
+      }, 1000);
+    }
+  };
+  const setActive = (i) => {
+    if (i === active) return;
+    active = i;
+    track.dataset.active = String(i);
+    mark(i);
+    say(cards[i].querySelector('.spill').textContent); // il dit le nom de l'arrêt dès qu'il est au centre
   };
   const nearest = () => {
     const mid = track.scrollLeft + track.clientWidth / 2;
@@ -199,12 +221,7 @@ function initCarousel(c) {
   track.addEventListener('scroll', () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      const i = nearest();
-      if (i === active) return;
-      active = i;
-      track.dataset.active = String(i);
-      mark(i);
-      say(cards[i].querySelector('.spill').textContent); // il dit le nom de l'arrêt dès qu'il est au centre
+      setActive(nearest());
     }, 110);
   });
   track.addEventListener('click', (event) => {
@@ -216,7 +233,7 @@ function initCarousel(c) {
   });
   screen.querySelector('[data-act="car-prev"]').addEventListener('click', () => active > 0 && scrollTo(active - 1));
   screen.querySelector('[data-act="car-next"]').addEventListener('click', () => active < cards.length - 1 && scrollTo(active + 1));
-  requestAnimationFrame(() => scrollTo(0, 'instant'));
+  scrollTo(0, 'instant'); // tout de suite (un retard d'affichage ne doit pas ramener le carrousel au 1er arrêt après un toucher)
   // Dire le premier arrêt pour que l'utilisateur sache où il se trouve.
   say(cards[0].querySelector('.spill').textContent);
 }

@@ -46,12 +46,31 @@ export function createDemo({ speed, loop, api }) {
     await sleep(reading, 500);
   };
 
+  /** Arrêt affiché au centre du carrousel (le défilement doux est plus ou moins lent selon le téléphone). */
+  const activeStop = () => Math.max([...document.querySelectorAll('.scard')].findIndex((card) => card.classList.contains('active')), 0);
+
   async function carouselNext(times) {
-    for (let i = 0; i < times; i++) await tap('[data-act="car-next"]', { after: 500, min: 750 });
+    for (let i = 0; i < times; i++) {
+      const target = activeStop() + 1;
+      await tap('[data-act="car-next"]', { after: 100, min: 100 });
+      // on attend que l'arrêt soit vraiment arrivé au centre ; sinon on retouche la flèche (2 essais de plus)
+      for (let attempt = 0; attempt < 3 && activeStop() !== target; attempt++) {
+        if (attempt > 0) document.querySelector('[data-act="car-next"]')?.click();
+        for (let k = 0; k < 20 && activeStop() !== target; k++) await sleep(100, 100);
+      }
+      await sleep(400, 300);
+    }
   }
 
   async function backToHome() {
-    for (let guard = 0; api.view() !== 'home' && guard < 6; guard++) await tap('[data-act="back"]', { after: 500, min: 400 });
+    const depth = () => history.state?.depth ?? 0;
+    for (let guard = 0; api.view() !== 'home' && depth() > 0 && guard < 6; guard++) {
+      const before = depth();
+      await tap('[data-act="back"]', { after: 100, min: 100 });
+      // le retour du navigateur est asynchrone : on attend qu'il soit fait avant de retoucher (sinon on sortirait de l'appli)
+      for (let k = 0; k < 40 && depth() === before; k++) await sleep(100, 100);
+      await sleep(300, 250);
+    }
   }
 
   async function tour() {
