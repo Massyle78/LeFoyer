@@ -26,7 +26,6 @@
 
   "help.title": "Aiuto",
   "help.out": "Scendere",
-  "help.control": "Mostrare il biglietto ai controllori",
   "help.lost": "Mi sono perso/a",
   "help.unwell": "Non mi sento bene",
 
@@ -37,10 +36,7 @@
   "out.more_time": "Più tempo alla porta posteriore",
   "out.remind": "Ricordami la mia fermata",
 
-  "comm.title": "Parlare",
-  "comm.sub": "Cosa voglio dire?",
-  "comm.repeat": "Ripeta lentamente, per favore",
-  "comm.seat": "Un posto a sedere, per favore",
+  "help.seat": "Un posto a sedere, per favore",
 
   "stop.title.ramp": "Scendere",
   "stop.title.front_door": "Scendere",
@@ -55,7 +51,6 @@
   "phrase.hello": "Ciao!",
   "phrase.repeat": "Ripeta lentamente, per favore.",
   "phrase.seat": "Posso avere un posto a sedere, per favore?",
-  "phrase.control": "Ecco il mio biglietto.",
   "phrase.lost": "Mi sono perso/a. Può aiutarmi, per favore?",
   "phrase.unwell": "Non mi sento bene. Ho bisogno di aiuto, per favore.",
   "phrase.ramp": "Ho bisogno di una rampa per scendere a {stop}, per favore.",
@@ -111,7 +106,7 @@
   "demo.c.check_yes": "Verde: sì, questo autobus ci va.",
   "demo.c.help": "Arancione: ho bisogno di aiuto per scendere. Viene mostrato e detto alle persone intorno.",
   "demo.c.unwell": "Rosso: urgente. Mi sento male.",
-  "demo.c.repeat": "Comunicazione: chiedere di ripetere lentamente.",
+  "demo.c.repeat": "Comunicazione: un solo tocco per chiedere di ripetere lentamente. Un posto a sedere: in Aiuto.",
   "demo.c.remind": "Scelgo la mia fermata per essere avvisato.",
   "demo.c.calm": "Verde: va tutto bene, aspetto.",
   "demo.c.soon": "Arancione: preparati, la mia fermata è la prossima. Il telefono vibra.",

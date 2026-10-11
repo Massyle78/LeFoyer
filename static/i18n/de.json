@@ -26,7 +26,6 @@
 
   "help.title": "Hilfe",
   "help.out": "Aussteigen",
-  "help.control": "Ticket den Kontrolleuren zeigen",
   "help.lost": "Ich habe mich verirrt",
   "help.unwell": "Mir ist nicht gut",
 
@@ -37,10 +36,7 @@
   "out.more_time": "Mehr Zeit an der Hintertür",
   "out.remind": "Mich an meine Haltestelle erinnern",
 
-  "comm.title": "Sprechen",
-  "comm.sub": "Was möchte ich sagen?",
-  "comm.repeat": "Bitte langsam wiederholen",
-  "comm.seat": "Einen Sitzplatz, bitte",
+  "help.seat": "Einen Sitzplatz, bitte",
 
   "stop.title.ramp": "Aussteigen",
   "stop.title.front_door": "Aussteigen",
@@ -55,7 +51,6 @@
   "phrase.hello": "Hallo!",
   "phrase.repeat": "Bitte wiederholen Sie langsam.",
   "phrase.seat": "Darf ich bitte einen Sitzplatz haben?",
-  "phrase.control": "Hier ist mein Ticket.",
   "phrase.lost": "Ich habe mich verirrt. Können Sie mir bitte helfen?",
   "phrase.unwell": "Mir ist nicht gut. Ich brauche bitte Hilfe.",
   "phrase.ramp": "Ich brauche eine Rampe zum Aussteigen bei {stop}, bitte.",
@@ -111,7 +106,7 @@
   "demo.c.check_yes": "Grün: ja, dieser Bus fährt dorthin.",
   "demo.c.help": "Orange: Ich brauche Hilfe beim Aussteigen. Es wird den Leuten um mich gezeigt und gesagt.",
   "demo.c.unwell": "Rot: dringend. Mir ist nicht gut.",
-  "demo.c.repeat": "Kommunikation: bitten, langsam zu wiederholen.",
+  "demo.c.repeat": "Kommunikation: ein Tipp, um langsames Wiederholen zu erbitten. Ein Sitzplatz: unter Hilfe.",
   "demo.c.remind": "Ich wähle meine Haltestelle, um erinnert zu werden.",
   "demo.c.calm": "Grün: alles in Ordnung, ich warte.",
   "demo.c.soon": "Orange: Machen Sie sich bereit, meine Haltestelle ist die nächste. Das Telefon vibriert.",

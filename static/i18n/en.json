@@ -26,7 +26,6 @@
 
   "help.title": "Help",
   "help.out": "Getting out",
-  "help.control": "Showing my ticket to controllers",
   "help.lost": "I am lost",
   "help.unwell": "I am feeling unwell",
 
@@ -37,10 +36,7 @@
   "out.more_time": "More time at back door",
   "out.remind": "Remind me of my stop",
 
-  "comm.title": "Talking",
-  "comm.sub": "What do I want to say ?",
-  "comm.repeat": "Please repeat slowly",
-  "comm.seat": "A seat, please",
+  "help.seat": "A seat, please",
 
   "stop.title.ramp": "Getting out",
   "stop.title.front_door": "Getting out",
@@ -55,7 +51,6 @@
   "phrase.hello": "Hello !",
   "phrase.repeat": "Please repeat slowly.",
   "phrase.seat": "May I have a seat, please ?",
-  "phrase.control": "Here is my ticket.",
   "phrase.lost": "I am lost. Can you help me, please ?",
   "phrase.unwell": "I am feeling unwell. I need help, please.",
   "phrase.ramp": "I need a ramp to get out at {stop}, please.",
@@ -111,7 +106,7 @@
   "demo.c.check_yes": "Green: yes, this bus goes there.",
   "demo.c.help": "Orange: I need help to get out. It is shown and spoken to people around me.",
   "demo.c.unwell": "Red: urgent. I feel unwell.",
-  "demo.c.repeat": "Communication: ask to repeat slowly.",
+  "demo.c.repeat": "Communication: one touch to ask to repeat slowly. A seat is in Help.",
   "demo.c.remind": "I choose my stop to be reminded.",
   "demo.c.calm": "Green: all is well, I just wait.",
   "demo.c.soon": "Orange: get ready, my stop is next. The phone vibrates.",

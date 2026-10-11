@@ -9,7 +9,7 @@ import { stopStrip, stopsLeft, aheadIndexes, tripStatus } from './logic.js';
 // Les trois « moments » en couleurs : vert = tout va bien / j'attends, orange = je me prépare / j'ai besoin d'aide,
 // rouge = j'agis maintenant (descendre, urgence). Toujours doublés d'une icône et d'un texte (pas seulement la couleur).
 const STATUS_TONE = { calm: 'ok', soon: 'warn', now: 'stop' };
-const PHRASE_TONE = { hello: 'ok', repeat: 'ok', seat: 'ok', ticket: 'ok', control: 'ok', lost: 'warn', ramp: 'warn', front_door: 'warn', more_time: 'warn', unwell: 'stop' };
+const PHRASE_TONE = { hello: 'ok', repeat: 'ok', seat: 'ok', ticket: 'ok', lost: 'warn', ramp: 'warn', front_door: 'warn', more_time: 'warn', unwell: 'stop' };
 
 const statusOf = (c) => tripStatus({ next: c.pos.next, atStop: c.pos.atStop, dest: c.destIndex });
 const toneOf = (c) => STATUS_TONE[statusOf(c)] ?? '';
@@ -94,7 +94,8 @@ function header(c) {
 }
 
 function bubble(c) {
-  return `<button class="bubble" type="button" data-say="${esc(c.t('comm.title'))}" data-nav='${json({ view: 'comm' })}'
+  // Un seul toucher : la bulle dit « répétez doucement » et ouvre directement la carte (plus de choix intermédiaire)
+  return `<button class="bubble" type="button" data-say="${esc(c.t('phrase.repeat'))}" data-nav='${json({ view: 'card', params: { phrase: 'repeat', icon: 'repeat' } })}'
       aria-label="${esc(c.t('home.repeat'))}">
     <svg viewBox="0 0 200 200" aria-hidden="true"><defs><path id="bb-bub" d="M20,122 A84,84 0 0 1 150,34"/></defs>
       <text><textPath href="#bb-bub">${esc(c.t('home.repeat'))}</textPath></text></svg>
@@ -216,7 +217,7 @@ const views = {
   help(c) {
     const tiles = [
       tile({ icon: 'getting_out', label: c.t('help.out'), nav: { view: 'out' } }),
-      tile({ icon: 'controller', label: c.t('help.control'), say: c.t('phrase.control'), nav: { view: 'card', params: { phrase: 'control', icon: 'controller' } } }),
+      tile({ icon: 'seat', label: c.t('help.seat'), say: c.t('phrase.seat'), nav: { view: 'card', params: { phrase: 'seat', icon: 'seat' } } }),
       tile({ icon: 'lost', label: c.t('help.lost'), say: c.t('phrase.lost'), nav: { view: 'card', params: { phrase: 'lost', icon: 'lost' } } }),
       tile({ icon: 'unwell', label: c.t('help.unwell'), say: c.t('phrase.unwell'), nav: { view: 'card', params: { phrase: 'unwell', icon: 'unwell' } } }),
     ].join('');
@@ -231,14 +232,6 @@ const views = {
       tile({ icon: 'bell', label: c.t('out.remind'), nav: { view: 'picker', params: { need: 'remind' } } }),
     ].join('');
     return page(c, `${heading(c.t('out.title'), c.t('out.sub'))}<div class="grid">${tiles}</div>`);
-  },
-
-  comm(c) {
-    const tiles = [
-      tile({ icon: 'repeat', label: c.t('comm.repeat'), say: c.t('phrase.repeat'), nav: { view: 'card', params: { phrase: 'repeat', icon: 'repeat' } } }),
-      tile({ icon: 'seat', label: c.t('comm.seat'), say: c.t('phrase.seat'), nav: { view: 'card', params: { phrase: 'seat', icon: 'seat' } } }),
-    ].join('');
-    return page(c, `${heading(c.t('comm.title'), c.t('comm.sub'))}<div class="grid">${tiles}</div>`, { withBubble: false });
   },
 
   /** Choix de l'arrêt : un seul arrêt à la fois, les voisins en transparence. */

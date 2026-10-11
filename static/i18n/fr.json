@@ -26,7 +26,6 @@
 
   "help.title": "Aide",
   "help.out": "Descendre",
-  "help.control": "Montrer mon billet aux contrôleurs",
   "help.lost": "Je suis perdu(e)",
   "help.unwell": "Je ne me sens pas bien",
 
@@ -37,10 +36,7 @@
   "out.more_time": "Plus de temps à la porte arrière",
   "out.remind": "Me rappeler mon arrêt",
 
-  "comm.title": "Parler",
-  "comm.sub": "Que veux-je dire ?",
-  "comm.repeat": "Répétez doucement, s'il vous plaît",
-  "comm.seat": "Une place assise, s'il vous plaît",
+  "help.seat": "Une place assise, s'il vous plaît",
 
   "stop.title.ramp": "Descendre",
   "stop.title.front_door": "Descendre",
@@ -55,7 +51,6 @@
   "phrase.hello": "Bonjour !",
   "phrase.repeat": "Répétez doucement, s'il vous plaît.",
   "phrase.seat": "Puis-je m'asseoir, s'il vous plaît ?",
-  "phrase.control": "Voici mon billet.",
   "phrase.lost": "Je suis perdu(e). Pouvez-vous m'aider, s'il vous plaît ?",
   "phrase.unwell": "Je ne me sens pas bien. J'ai besoin d'aide, s'il vous plaît.",
   "phrase.ramp": "J'ai besoin d'une rampe pour descendre à {stop}, s'il vous plaît.",
@@ -111,7 +106,7 @@
   "demo.c.check_yes": "Vert : oui, ce bus y va.",
   "demo.c.help": "Orange : j'ai besoin d'aide pour descendre. C'est montré et dit aux personnes autour.",
   "demo.c.unwell": "Rouge : urgent. Je ne me sens pas bien.",
-  "demo.c.repeat": "Communication : demander de répéter doucement.",
+  "demo.c.repeat": "Communication : un seul toucher pour demander de répéter doucement. Une place assise : dans l'aide.",
   "demo.c.remind": "Je choisis mon arrêt pour être prévenu.",
   "demo.c.calm": "Vert : tout va bien, j'attends.",
   "demo.c.soon": "Orange : préparez-vous, mon arrêt est le prochain. Le téléphone vibre.",

@@ -110,8 +110,10 @@ export function createDemo({ speed, loop, api }) {
 
     // 4. communiquer avec les personnes autour
     await say('demo.c.repeat', 1500);
-    await tap('.bubble');
-    await tap('[data-nav*="repeat"]', { after: 2200 });
+    await tap('.bubble', { after: 2200 }); // un seul toucher : la carte « répétez doucement » s'affiche et se dit
+    await backToHome();
+    await tap('[data-nav*="help"]');
+    await tap('[data-nav*="seat"]', { after: 2200 }); // une place assise : dans l'aide
     await backToHome();
 
     // 5. mon arrêt : vert, orange (préparez-vous), rouge (descendez) avec vibrations

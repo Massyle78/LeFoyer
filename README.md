@@ -36,7 +36,7 @@ prendre le bus **sans avoir à parler ni à écrire**, et sans jamais déranger 
 | 🎨 **Des couleurs qui disent l'essentiel** | 🟢 tout va bien · 🟠 je me prépare ou j'ai besoin d'aide · 🔴 j'agis maintenant. Jamais la couleur seule : toujours une icône et un texte. |
 | 📳 **Des vibrations pour les moments importants** | Le téléphone vibre quand mon arrêt approche, et fort quand il faut descendre. |
 | 🙋 **Très peu de choix** | Dire bonjour, vérifier le bus, acheter un billet, demander de l'aide. Rien de plus. |
-| 🗣️ **Se faire comprendre sans parler** | De grandes cartes, dites à voix haute **pour les personnes autour** : « J'ai besoin d'une rampe », « Répétez doucement, s'il vous plaît », « Une place assise ». |
+| 🗣️ **Se faire comprendre sans parler** | De grandes cartes, dites à voix haute **pour les personnes autour** : « J'ai besoin d'une rampe », « Répétez doucement, s'il vous plaît » (un seul toucher sur la bulle), « Une place assise » (dans l'aide). |
 | 🔒 **Tout reste sur le téléphone** | Aucune communication avec le conducteur, aucun compte, rien n'est envoyé au serveur. |
 | 🌍 **4 langues** | 🇬🇧 English · 🇫🇷 Français · 🇩🇪 Deutsch · 🇮🇹 Italiano, changeables à tout moment. |
 
@@ -97,7 +97,7 @@ Il y a donc **deux entrées de ligne** (un QR code par sens) : `701` (→ Bourdo
   <tr>
     <td align="center"><img src="docs/screenshots/04-answer-yes.png" width="190"><br><b>🟢 Oui, ce bus y va</b><br><sub>vert = tout va bien</sub></td>
     <td align="center"><img src="docs/screenshots/05-answer-no.png" width="190"><br><b>🔴 Non, ce n'est pas le bon bus</b><br><sub>rouge = j'agis</sub></td>
-    <td align="center"><img src="docs/screenshots/06-help.png" width="190"><br><b>🙋 Aide</b><br><sub>descendre, billet, perdu(e), malaise</sub></td>
+    <td align="center"><img src="docs/screenshots/06-help.png" width="190"><br><b>🙋 Aide</b><br><sub>descendre, place assise, perdu(e), malaise</sub></td>
   </tr>
   <tr>
     <td align="center"><img src="docs/screenshots/07-ramp-card.png" width="190"><br><b>🟠 « J'ai besoin d'une rampe »</b><br><sub>carte à montrer, dite à voix haute</sub></td>
@@ -121,9 +121,9 @@ Il y a donc **deux entrées de ligne** (un QR code par sens) : `701` (→ Bourdo
 2. 👋 **Accueil** : *Dire bonjour*, *Vérifier la destination du bus*, *Acheter un billet*, *Aide*.
 3. 👆 Un toucher sur une tuile **la dit à voix haute** puis ouvre la catégorie. Les arrêts se choisissent dans un carrousel
    horizontal (un arrêt à la fois, voisins en transparence ; le nom est dit quand il arrive au centre).
-4. 🙋 **Aide** : *Descendre* (rampe, porte avant, plus de temps, **me rappeler mon arrêt**), *Montrer mon billet aux contrôleurs*,
+4. 🙋 **Aide** : *Descendre* (rampe, porte avant, plus de temps, **me rappeler mon arrêt**), *Une place assise*,
    *Je suis perdu(e)*, *Je ne me sens pas bien*. Ces demandes s'affichent en grand et se disent **pour les personnes autour**.
-5. 💬 **Bulle « Répétez doucement »** (en bas à droite) : *Répétez doucement* / *Une place assise*.
+5. 💬 **Bulle « Répétez doucement »** (en bas à droite) : un seul toucher, la phrase est dite et s'affiche directement en grand.
 6. 📍 **Mon arrêt** : pictogramme (ou photo), nombre d'arrêts restants, frise avec « ··· » (au plus 4 repères affichés) ; alarme plein écran
    (« Préparez-vous » puis « C'est votre arrêt ») avec voix, vibration et écran maintenu allumé.
 7. ⬅️ **Retour** partout (le bouton retour du téléphone fonctionne aussi). En bas : **⚙️ Réglages** puis les langues.
@@ -137,7 +137,7 @@ Un écran de départ demande un toucher (nécessaire pour que le navigateur auto
 « touche » elle-même les vrais boutons, avec une mise en évidence jaune et un bandeau noir qui explique ce qui est montré :
 
 🔳 choix de la ligne → 👆 tout parle au toucher → 🟢🔴 bon / mauvais bus → 🟠 aide pour descendre → 🔴 urgence →
-💬 « répétez doucement » → 📍 rappel de mon arrêt avec alarmes 🟠 puis 🔴 et vibrations → ⚙️ réglages → 🌍 changement de langue.
+💬 « répétez doucement » + place assise → 📍 rappel de mon arrêt avec alarmes 🟠 puis 🔴 et vibrations → ⚙️ réglages → 🌍 changement de langue.
 
 La démo se joue sur la **ligne par défaut (701)**. La croix du bandeau l'arrête à tout moment.
 
