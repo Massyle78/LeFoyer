@@ -1,4 +1,5 @@
-"""Génère merch/bus-buddy-pins.dxf : une planche de pin's et de porte-clés Bus Buddy pour la découpe laser.
+"""Génère merch/bus-buddy-pins.dxf : une planche de pin's, de porte-clés et de petits souvenirs Bus Buddy pour la découpe laser.
+(6 pin's, 6 porte-clés, 10 mini badges Ø 25 mm et 8 petites formes : Le Foyer / HackaHealth / Bus Buddy / EPFL / équipe)
 
     python tools/make_pins_dxf.py                  # planche 300 x 200 mm
     python tools/make_pins_dxf.py --sheet 400x300  # autre taille de plaque

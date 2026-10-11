@@ -199,7 +199,7 @@ Les vidéos sont générées automatiquement par `tools/record_demo.py` (Chrome 
 python app.py                                          # dans un autre terminal
 python tools/record_demo.py http://localhost:5000      # docs/video/bus-buddy-demo.mp4 (diapo)
 python tools/record_demo.py http://localhost:5000 --phone              # téléphone seul
-python tools/record_demo.py https://massyle78.github.io/LeFoyer --lang fr --out docs/video/demo-fr.mp4
+python tools/record_demo.py http://localhost:5000 --lang fr --intro it   # version française : bonjour en italien, puis français (docs/video/bus-buddy-demo-fr.mp4)
 ```
 
 ---
@@ -230,9 +230,19 @@ l'écran. Le QR code encode l'adresse du site déployé ; en local il encode l'a
 
 ## 🎁 Pin's et souvenirs (découpe laser)
 
-`merch/bus-buddy-pins.dxf` : une planche **300 × 200 mm** de **22 pièces**, prête pour la découpe laser (acrylique ou contreplaqué de 3 mm) :
-6 modèles de pin's (🔵 rond · 🚌 bus · 🏠 « Le Foyer » · 💜 cœur · 🛑 panneau d'arrêt 701 · 💬 « Hello ! »), les 6 mêmes en **porte-clés** (anneau avec trou Ø 3,6 mm)
-et 10 mini badges Ø 25 mm. Calques : `CUT` (rouge, à découper), `ENGRAVE` (bleu, à graver), `SHEET` et `LABELS` (repères, à ne pas découper). Aperçu : `merch/bus-buddy-pins.png`.
+`merch/bus-buddy-pins.dxf` : une planche **300 × 200 mm** de **30 pièces**, prête pour la découpe laser (acrylique ou contreplaqué de 3 mm) :
+6 modèles de pin's (🔵 rond · 🚌 bus · 🏠 « Le Foyer » · 💜 cœur · 🛑 panneau d'arrêt 701 · 💬 « Hello ! »), les 6 mêmes en **porte-clés** (anneau avec trou Ø 3,6 mm),
+et **18 petits souvenirs** centrés sur l'identité du projet (Le Foyer, HackaHealth, Bus Buddy, EPFL, l'équipe ; texte « TEAM » générique, sans noms propres) :
+
+- **10 mini badges Ø 25 mm** (rangée 3) : `M01` astérisque + BUS BUDDY · `M02` texte courbe « BUS BUDDY / LE FOYER » autour de l'astérisque · `M03` maison + « TEAM / LE FOYER » en arc ·
+  `M04` cœur + HACKA/HEALTH 2026 · `M05` texte courbe « HACKAHEALTH / EPFL 2026 » autour d'une croix santé · `M06` EPFL 2026 · `M07` bus + TEAM 701 ·
+  `M08` texte courbe « HACKAHEALTH / BUS BUDDY » autour d'un bus · `M09` HACKA/HEALTH 2026 · `M10` TEAM + LE FOYER.
+- **8 petites formes** (rangée 4) : 2 **étiquettes** à trou Ø 3,6 mm pour porte-clés/sac (`T1` LE FOYER + HACKAHEALTH, `T2` BUS BUDDY + EPFL 2026), 2 **écussons** (`S1` EPFL, `S2` HACKA/HEALTH),
+  2 **cœurs** (`H1` TEAM, `H2` BUS BUDDY) et 2 **hexagones** (`X1` HACKA/HEALTH + croix santé, `X2` maison + LE FOYER).
+
+Les badges et formes sans trou se collent sur un pin's à dos de 20 mm (rien à découper au dos). Gravure lisible : capitales de 2,2 mm minimum, liseré à 1,4 mm du bord, au moins 0,4 mm entre le texte et le liseré.
+Le nom s'écrit « HackaHealth » (hackahealth.ch), gravé en capitales ; le logo EPFL n'est pas reproduit (texte seul) et seuls l'astérisque Bus Buddy, la maison, le cœur, la croix et le bus sont des dessins faits maison.
+Calques : `CUT` (rouge, à découper), `ENGRAVE` (bleu, à graver), `SHEET` et `LABELS` (repères, à ne pas découper). Aperçu : `merch/bus-buddy-pins.png`.
 
 ```
 python tools/make_pins_dxf.py                  # régénère le DXF et l'aperçu
