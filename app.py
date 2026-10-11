@@ -18,7 +18,7 @@ from html import escape
 from pathlib import Path
 
 import segno
-from flask import Flask, Response, abort, request, send_from_directory
+from flask import Flask, Response, abort, redirect, request, send_from_directory
 
 ROOT = Path(__file__).resolve().parent
 STATIC = ROOT / "static"
@@ -58,6 +58,14 @@ def line_url(number: str) -> str:
 @app.get("/")
 def index():
     return send_from_directory(STATIC, "index.html", max_age=0)
+
+
+@app.get("/present")
+@app.get("/present/")
+def present():
+    """Page de présentation (diapositive) : photos de l'équipe | démo interactive | QR code de la ligne 701."""
+    query = request.query_string.decode()
+    return redirect("/static/present.html" + (f"?{query}" if query else ""))
 
 
 @app.get("/manifest.webmanifest")

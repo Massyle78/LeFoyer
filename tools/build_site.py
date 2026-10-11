@@ -22,6 +22,14 @@ def main() -> None:
     for name in ("index.html", "sw.js", "manifest.webmanifest"):
         shutil.copy(STATIC / name, site / name)
     (site / ".nojekyll").write_text("", encoding="utf-8")
+    # /present/ : page de présentation (la vraie page est static/present.html ; les paramètres de l'adresse sont conservés)
+    (site / "present").mkdir()
+    (site / "present" / "index.html").write_text(
+        '<!doctype html><meta charset="utf-8"><title>Bus Buddy</title>'
+        "<script>location.replace('../static/present.html' + location.search)</script>"
+        '<a href="../static/present.html">Bus Buddy presentation</a>',
+        encoding="utf-8",
+    )
 
     items = []
     for line in load_lines():

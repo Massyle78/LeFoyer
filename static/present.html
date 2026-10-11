@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bus Buddy · Presentation</title>
+  <link rel="icon" href="img/icon-192.png">
+  <link rel="stylesheet" href="css/present.css">
+</head>
+<body>
+  <!-- Scène 1920x1080 mise à l'échelle de la fenêtre : à enregistrer en plein écran (touche F) -->
+  <div id="stage">
+    <section class="col left">
+      <header class="brand">
+        <img src="img/icon-192.png" alt="" class="logo">
+        <div>
+          <h1>Bus Buddy</h1>
+          <p data-i18n="tagline">Take the bus on your own.</p>
+        </div>
+      </header>
+
+      <figure class="polaroid" aria-label="The team">
+        <div class="slides" id="slides">
+          <img src="img/team/team-3.jpg" alt="The team smiling at the camera" class="on">
+          <img src="img/team/team-4.jpg" alt="The team working at the hackathon">
+          <img src="img/team/team-1.jpg" alt="The team testing paper prototypes">
+          <img src="img/team/team-2.jpg" alt="The team in front of the project whiteboard">
+        </div>
+        <figcaption><span data-i18n="team">Le Foyer × HackaHealth</span></figcaption>
+      </figure>
+    </section>
+
+    <section class="col center">
+      <div class="phone">
+        <div class="screen">
+          <iframe id="demo" title="Bus Buddy demo" allow="vibrate; autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="col right">
+      <h2 data-i18n="scan">Scan to try it</h2>
+      <div class="qrcard">
+        <img id="qr" src="../qr/701.svg" alt="QR code of line 701">
+      </div>
+      <div class="chip"><b>701</b><span data-i18n="route">Morges ⇄ Lausanne</span></div>
+      <p class="hint" data-i18n="hint">Open your phone camera and point it at the code.</p>
+    </section>
+  </div>
+
+  <!-- Commandes discrètes (visibles au survol, masquées à l'enregistrement) -->
+  <nav id="tools" aria-label="Controls">
+    <button type="button" data-do="restart" title="Restart the demo (R)">⟳ <span data-i18n="restart">Restart</span></button>
+    <button type="button" data-do="lang" title="Language (L)">🌍 <span id="langname">EN</span></button>
+    <button type="button" data-do="full" title="Full screen (F)">⛶ <span data-i18n="full">Full screen</span></button>
+  </nav>
+
+  <script type="module" src="js/present.js"></script>
+</body>
+</html>

@@ -58,6 +58,7 @@ L'application est hébergée sur **GitHub Pages** et se met à jour à chaque `g
 | 🎬 **Démo automatique** | https://massyle78.github.io/LeFoyer/?demo=2 |
 | ⚡ **Démo rapide** (×4) | https://massyle78.github.io/LeFoyer/?demo=4 |
 | 🇫🇷 **Démo en français, en boucle** (stand, salon…) | https://massyle78.github.io/LeFoyer/?demo=2&lang=fr&loop=1 |
+| 🖥️ **Page de présentation** (diapositive : équipe · démo · QR code) | https://massyle78.github.io/LeFoyer/present/ |
 | 💻 **Code source** | https://github.com/Massyle78/LeFoyer |
 
 📱 **Sur téléphone** : scanne ce QR code pour ouvrir l'application.
@@ -165,6 +166,28 @@ La démo se joue sur la **ligne par défaut (701)**, avec ses pictogrammes d'arr
 - `&autostart=1` : démarre sans l'écran de départ (voix et vibration peuvent alors être bloquées par le navigateur) ;
 - `&loop=1` : rejoue la démo en boucle ;
 - exemple : `/?demo=2&lang=fr&loop=1`.
+
+---
+
+## 🖥️ Page de présentation (pour une diapositive)
+
+Une page pensée pour **être enregistrée en plein écran (16:9)** puis posée au milieu d'une diapositive : à gauche 📸 les photos de l'équipe
+(diaporama), au centre 📱 un téléphone qui joue la **démo automatique et interactive** (on peut aussi toucher l'écran), à droite 🔳 le
+**QR code de la ligne 701** pour que le public l'essaie.
+
+👉 https://massyle78.github.io/LeFoyer/present/ (en local : `http://localhost:5000/present`)
+
+| Paramètre / touche | Effet |
+|---|---|
+| `?demo=1` | vitesse de la démo (1 normale, 2 deux fois plus vite…) |
+| `&lang=en\|fr\|de\|it` | langue de la démo et des textes (touche **L** pour en changer) |
+| `&loop=0` | ne pas rejouer en boucle (par défaut la démo tourne en boucle) |
+| `&autostart=1` | lance la démo sans l'écran de départ (sinon : un toucher dans le téléphone autorise la voix) |
+| `&rec=1` | masque les commandes (qui n'apparaissent de toute façon qu'au survol de la souris) |
+| **F** · **R** | plein écran · relancer la démo |
+
+Astuce d'enregistrement : ouvrir la page en plein écran (F), toucher une fois l'écran de départ du téléphone pour avoir la voix, puis enregistrer
+l'écran. Le QR code encode l'adresse du site déployé ; en local il encode l'adresse de l'ordinateur sur le réseau (voir `BUSBUDDY_PUBLIC_URL`).
 
 ---
 

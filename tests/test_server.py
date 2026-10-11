@@ -21,6 +21,16 @@ class ServerTest(unittest.TestCase):
         self.assertEqual(manifest.status_code, 200)
         self.assertEqual(json.loads(manifest.data)["display"], "standalone")
 
+    def test_page_de_presentation(self):
+        redirect = self.client.get("/present?demo=2&lang=fr")
+        self.assertEqual(redirect.status_code, 302)
+        self.assertTrue(redirect.headers["Location"].endswith("/static/present.html?demo=2&lang=fr"))
+        page = self.client.get("/static/present.html").data.decode()
+        for needle in ("../qr/701.svg", "js/present.js", "img/team/team-1.jpg", 'id="demo"'):
+            self.assertIn(needle, page)
+        for path in ("/static/js/present.js", "/static/css/present.css", "/static/img/team/team-1.jpg"):
+            self.assertEqual(self.client.get(path).status_code, 200, path)
+
     def test_qr_par_ligne(self):
         page = self.client.get("/qr").data.decode()
         for number in ("701", "701-tolochenaz", "8", "123"):

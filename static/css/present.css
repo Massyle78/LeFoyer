@@ -1,0 +1,50 @@
+/* Page de présentation (diapositive) : [photos de l'équipe] [démo interactive] [QR code de la ligne 701] */
+:root { --violet: #1D05A9; --violet-2: #9C7EC3; --rose: #FEDADA; --ink: #0d0d12; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #0d0d12; font-family: Helvetica, Arial, sans-serif; color: var(--ink); }
+
+#stage {
+  position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+  transform-origin: 0 0; /* position et échelle : voir present.js */
+  display: grid; grid-template-columns: 1fr 500px 1fr; align-items: center; gap: 40px; padding: 48px 64px;
+  background: radial-gradient(circle at 18% 12%, #fff1f1 0, transparent 38%), radial-gradient(circle at 88% 92%, #e7d9f6 0, transparent 40%), var(--rose);
+  overflow: hidden;
+}
+.col { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; min-width: 0; }
+
+/* --- gauche : l'équipe --- */
+.brand { display: flex; align-items: center; gap: 22px; }
+.brand .logo { width: 92px; height: 92px; border-radius: 22px; box-shadow: 0 8px 24px #1d05a933; }
+.brand h1 { margin: 0; font-size: 76px; line-height: 1; color: var(--violet); font-family: Georgia, 'Times New Roman', serif; letter-spacing: -.01em; }
+.brand p { margin: 8px 0 0; font-size: 28px; color: #3a2a8f; }
+
+.polaroid { margin: 0; background: #fff; padding: 18px 18px 0; border-radius: 22px; box-shadow: 0 24px 60px #1d05a940; transform: rotate(-2.2deg); width: 560px; }
+.slides { position: relative; width: 100%; aspect-ratio: 4 / 4.6; overflow: hidden; border-radius: 10px; background: #ddd; }
+.slides img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.02); transition: opacity 1.4s ease; }
+.slides img.prev { opacity: 1; z-index: 1; transform: scale(1.1) translate(-1%, -1%); } /* l'ancienne photo reste opaque dessous pendant que la nouvelle apparaît : pas de trou gris */
+.slides img.on { opacity: 1; z-index: 2; animation: drift 9s ease-out forwards; }
+@keyframes drift { from { transform: scale(1.02); } to { transform: scale(1.1) translate(-1%, -1%); } }
+.polaroid figcaption { padding: 18px 0 22px; text-align: center; font-size: 30px; font-weight: 700; color: var(--violet); font-family: Georgia, 'Times New Roman', serif; }
+
+/* --- centre : le téléphone qui joue la démo --- */
+.phone {
+  width: 500px; height: 996px; padding: 16px; border-radius: 68px; background: #14123a;
+  box-shadow: 0 0 0 3px #3b3790, 0 40px 90px #1d05a966, inset 0 0 0 2px #ffffff14; position: relative;
+}
+.screen { position: relative; width: 468px; height: 964px; border-radius: 52px; overflow: hidden; background: #fff; }
+.screen iframe { position: absolute; left: 0; top: 0; width: 390px; height: 803px; border: 0; transform: scale(1.2); transform-origin: 0 0; background: var(--rose); }
+
+/* --- droite : le QR code --- */
+.right h2 { margin: 0; font-size: 60px; color: var(--violet); font-family: Georgia, 'Times New Roman', serif; }
+.qrcard { background: #fff; border-radius: 36px; padding: 26px; box-shadow: 0 24px 60px #1d05a940; width: 470px; }
+.qrcard img { display: block; width: 100%; height: auto; }
+.chip { display: flex; align-items: center; gap: 18px; background: var(--violet); color: #fff; border-radius: 999px; padding: 12px 34px 12px 14px; font-size: 34px; }
+.chip b { background: #fff; color: var(--violet); border-radius: 999px; padding: 6px 24px; font-size: 44px; }
+.hint { margin: 0; font-size: 26px; color: #3a2a8f; text-align: center; max-width: 440px; }
+
+/* --- commandes (au survol uniquement) --- */
+#tools { position: fixed; right: 14px; bottom: 14px; display: flex; gap: 8px; opacity: 0; transition: opacity .25s; z-index: 10; }
+body:hover #tools { opacity: .92; }
+body.rec #tools { display: none; }
+#tools button { font: 600 14px Helvetica, Arial, sans-serif; border: 0; border-radius: 999px; padding: 9px 16px; background: #1D05A9; color: #fff; cursor: pointer; }
+#tools button:hover { background: #3a1fd0; }
