@@ -3,6 +3,7 @@
 //   ?demo=1           vitesse de la démo (1 normale, 2 deux fois plus vite…)       [défaut 1]
 //   ?lang=en|fr|de|it langue de la démo et des textes de la page                    [défaut en]
 //   ?tour=full        le tour complet (environ 3 min) au lieu de la démo courte d'une minute (par défaut)
+//   ?intro=it         la démo démarre dans cette langue (bonjour en italien) puis passe à ?lang=  (ex. ?lang=fr&intro=it)
 //   ?loop=0           ne pas rejouer la démo en boucle                              [défaut : en boucle]
 //   ?autostart=1      lance la démo sans l'écran de départ (mais la voix peut être bloquée par le navigateur)
 //   ?rec=1            masque les commandes (enregistrement) ; touches : F plein écran, R relancer, L langue
@@ -39,6 +40,7 @@ function demoUrl() {
   q.set('tour', params.get('tour') === 'full' ? 'full' : 'pitch'); // par défaut : la démo courte d'une minute
   if (params.get('loop') !== '0') q.set('loop', '1');
   if (params.get('autostart') === '1') q.set('autostart', '1');
+  if (params.get('intro')) q.set('intro', params.get('intro')); // ex. ?lang=fr&intro=it : bonjour en italien, puis la démo en français
   q.set('r', String(Date.now())); // jamais de version en cache
   return `../?${q}`;
 }

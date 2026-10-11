@@ -2,7 +2,7 @@
 
     python tools/record_demo.py http://localhost:5000            # diapo 1920x1080 : photos | téléphone | QR code
     python tools/record_demo.py http://localhost:5000 --phone    # téléphone seul (780x1600)
-    python tools/record_demo.py https://massyle78.github.io/LeFoyer --lang fr --out docs/video/demo-fr.mp4
+    python tools/record_demo.py http://localhost:5000 --lang fr --intro it   # version française : bonjour en italien, puis français
 
 La démo courte (`tour=pitch`, environ une minute) est jouée une seule fois. La voix n'est pas enregistrée : la démo
 affiche un bandeau explicatif à chaque étape.
@@ -140,7 +140,20 @@ def record_demo(cdp: Cdp, url: str, width: int, height: int, scale: float, end_t
     print(f"{len(cdp.frames)} images reçues en {time.time() - started:.0f} s ; fin de la démo {'vue' if end_seen else 'NON vue'}")
     if len(cdp.frames) < 10:
         raise SystemExit("trop peu d'images : enregistrement abandonné")
-    return list(cdp.frames)
+    return trim_blank(list(cdp.frames))
+
+
+def trim_blank(frames):
+    """Retire les premières images quand la page n'est pas encore affichée (fond uni)."""
+    start = 0
+    while start < len(frames) - 10:
+        pixels = np.asarray(Image.open(io.BytesIO(frames[start][1])).convert("L").resize((48, 96)), dtype=np.float32)
+        if pixels.std() > 12:  # un vrai écran de l'application : couleurs variées
+            break
+        start += 1
+    if start:
+        print(f"{start} image(s) vide(s) au début retirée(s)")
+    return frames[start:]
 
 
 class Writer:
@@ -237,6 +250,7 @@ def main() -> None:
     parser.add_argument("base", nargs="?", default="http://localhost:5000", help="adresse du site (local ou déployé)")
     parser.add_argument("--phone", action="store_true", help="enregistrer le téléphone seul (780x1600) au lieu de la diapo")
     parser.add_argument("--lang", default="en")
+    parser.add_argument("--intro", help="langue d'introduction : la démo dit bonjour dans cette langue puis passe à --lang (ex. --lang fr --intro it)")
     parser.add_argument("--speed", default="1", help="vitesse de la démo (1 = normale)")
     parser.add_argument("--tour", default="pitch", choices=["pitch", "full"])
     parser.add_argument("--out", type=Path, help="fichier de sortie (.mp4)")
@@ -246,18 +260,19 @@ def main() -> None:
     base = args.base.rstrip("/")
     end_key = "demo.p.end" if args.tour == "pitch" else "demo.c.end"  # le bandeau de fin : on s'arrête juste après
     end_text = json.loads((ROOT / "static" / "i18n" / f"{args.lang}.json").read_text(encoding="utf-8"))[end_key]
-    app_url = f"{base}/?demo={args.speed}&tour={args.tour}&lang={args.lang}&autostart=1"
+    app_url = f"{base}/?demo={args.speed}&tour={args.tour}&lang={args.lang}&autostart=1" + (f"&intro={args.intro}" if args.intro else "")
+    suffix = "" if args.lang == "en" else f"-{args.lang}"  # bus-buddy-demo-fr.mp4
 
     browser = Browser(1920, 1080)
     try:
         if args.phone:
             frames = record_demo(browser.cdp, app_url, 390, 800, 2, end_text, args.max)
-            out = args.out or ROOT / "docs" / "video" / "bus-buddy-demo-phone.mp4"
+            out = args.out or ROOT / "docs" / "video" / f"bus-buddy-demo{suffix}-phone.mp4"
             seconds = encode_plain(frames, (780, 1600), out)
         else:
             # téléphone de la diapo : 468x964 pixels (écran 390x803 agrandi 1,2 fois, comme dans present.css)
             frames = record_demo(browser.cdp, app_url, 390, 803, 1.2, end_text, args.max)
-            out = args.out or ROOT / "docs" / "video" / "bus-buddy-demo.mp4"
+            out = args.out or ROOT / "docs" / "video" / f"bus-buddy-demo{suffix}.mp4"
             seconds = encode_slide(frames, f"{base}/present/?lang={args.lang}&rec=1", browser.cdp, out, (468, 964))
         print(f"ok {out} ({seconds:.1f} s, {out.stat().st_size // 1024} Ko)")
     finally:

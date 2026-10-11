@@ -116,6 +116,7 @@
   "demo.c.end": "Fine della demo. Scansiona un codice QR per iniziare.",
   "demo.p.line": "Inizio: scansiono il codice QR sull'autobus.",
   "demo.p.hello": "1 · Dire ciao: un tocco, il telefono parla per me.",
+  "demo.p.langs": "1 · Dire ciao in ogni lingua: qui, in italiano.",
   "demo.p.verify": "2 · Verificare l'autobus: rosso, autobus sbagliato · verde, autobus giusto.",
   "demo.p.buy": "3 · Comprare un biglietto: la richiesta viene mostrata e detta.",
   "demo.p.help": "4 · Serve aiuto? Un'emergenza, o chiedere di ripetere lentamente.",

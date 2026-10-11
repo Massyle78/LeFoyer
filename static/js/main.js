@@ -4,7 +4,7 @@ import { createDemo } from './demo.js';
 import { goesTo, alarmPhase, lineFromQr } from './logic.js';
 import { languageName, loadLanguages, makeT, speechLang } from './i18n.js';
 import { SimulatedPosition } from './position.js';
-import { LANGS, demo, demoAutostart, demoLoop, demoSpeed, demoTour, manual, params, save, speedSeconds, store } from './store.js';
+import { LANGS, demo, demoAutostart, demoFinalLang, demoIntro, demoLoop, demoSpeed, demoTour, manual, params, save, speedSeconds, store } from './store.js';
 import { alarmHtml, demoCaptionHtml, demoStartHtml, renderView, statusBandHtml } from './views.js';
 
 const screen = document.getElementById('screen');
@@ -147,13 +147,18 @@ const demoApi = {
   view: () => screen.dataset.view,
   advanceBus: () => position?.advance(),
   lang: () => store.lang,
+  setLang(code) { // changement de langue sans bruit (reprise de la démo en boucle)
+    store.lang = code;
+    draw();
+    refreshCaption();
+  },
   reset: () => leaveLine(),
   defaultLine: () => defaultLine,
 };
 
 function startDemo() {
   overlay.innerHTML = '';
-  demoRun = createDemo({ speed: demoSpeed, loop: demoLoop, tour: demoTour, api: demoApi });
+  demoRun = createDemo({ speed: demoSpeed, loop: demoLoop, tour: demoTour, intro: demoIntro, finalLang: demoFinalLang, api: demoApi });
   refreshCaption();
   demoRun.start();
 }

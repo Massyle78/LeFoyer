@@ -10,7 +10,7 @@
 
 const STOP = Symbol('demo-stop');
 
-export function createDemo({ speed, loop, tour: which = 'full', api }) {
+export function createDemo({ speed, loop, tour: which = 'full', intro = null, finalLang = null, api }) {
   let stopped = false;
 
   /** Pause de `ms` (divisée par la vitesse), jamais plus courte que `min` (les animations ont une durée incompressible). */
@@ -77,13 +77,21 @@ export function createDemo({ speed, loop, tour: which = 'full', api }) {
   /** Démo courte d'environ une minute, pour une présentation : bonjour → vérifier → acheter → aide → notifications. */
   async function pitch() {
     api.reset();
+    if (intro && api.lang() !== intro) api.setLang(intro); // reprise en boucle : on repart de la langue d'introduction
     await say('demo.p.line', 1600);
     await tap(`[data-act="line"][data-arg="${api.defaultLine()}"]`, { after: 1100 });
 
-    // 1. bonjour : un toucher, l'appli parle à ma place
-    await say('demo.p.hello', 1000);
-    await tap('[data-nav*="hello"]', { after: 1500 });
-    await backToHome();
+    // 1. bonjour : un toucher, l'appli parle à ma place (avec intro : bonjour dans une autre langue, puis on passe à la langue de la démo)
+    if (intro) {
+      await say('demo.p.langs', 1000);
+      await tap('[data-nav*="hello"]', { after: 1500 });
+      await backToHome();
+      await tap(`.lang[data-arg="${finalLang}"]`, { after: 1300 });
+    } else {
+      await say('demo.p.hello', 1000);
+      await tap('[data-nav*="hello"]', { after: 1500 });
+      await backToHome();
+    }
 
     // 2. vérifier le bus : rouge (pas ce bus) puis vert (c'est le bon)
     await say('demo.p.verify', 1000);

@@ -169,6 +169,7 @@ La démo se joue sur la **ligne par défaut (701)**, avec ses pictogrammes d'arr
 - `&autostart=1` : démarre sans l'écran de départ (voix et vibration peuvent alors être bloquées par le navigateur) ;
 - `&loop=1` : rejoue la démo en boucle ;
 - `&tour=pitch` : la **démo courte d'une minute** (voir ci-dessous) au lieu du tour complet ;
+- `&intro=it` : (avec `&tour=pitch`) la démo commence dans cette langue (bonjour en italien) puis passe à la langue de `?lang=` : `/?demo=1&tour=pitch&lang=fr&intro=it` ;
 - exemple : `/?demo=2&lang=fr&loop=1`.
 
 ### ⏱️ La démo d'une minute : `&tour=pitch`
@@ -184,6 +185,12 @@ Exemple : https://massyle78.github.io/LeFoyer/?demo=1&tour=pitch&lang=fr
   <a href="docs/video/bus-buddy-demo.mp4"><img src="docs/video/poster.jpg" alt="Vidéo de la démo : équipe, démo et QR code" width="640"></a><br>
   <sub>▶️ <a href="docs/video/bus-buddy-demo.mp4"><b>Version diapositive 16:9</b></a> (équipe · démo · QR code, 1920×1080) ·
   <a href="docs/video/bus-buddy-demo-phone.mp4"><b>Téléphone seul</b></a> (780×1600) · vidéos muettes : le bandeau explique chaque étape</sub>
+</p>
+
+<p align="center">
+  <a href="docs/video/bus-buddy-demo-fr.mp4"><img src="docs/video/poster-fr.jpg" alt="Vidéo de la démo en français" width="640"></a><br>
+  <sub>🇫🇷 <a href="docs/video/bus-buddy-demo-fr.mp4"><b>Version française, diapositive 16:9</b></a> ·
+  <a href="docs/video/bus-buddy-demo-fr-phone.mp4"><b>téléphone seul</b></a> · elle commence par un **bonjour en italien** (🇮🇹 « Ciao ! ») pour montrer que l'application parle plusieurs langues, puis passe au français</sub>
 </p>
 
 Les vidéos sont générées automatiquement par `tools/record_demo.py` (Chrome sans interface + PyAV) :
@@ -210,6 +217,7 @@ Une page pensée pour **être enregistrée en plein écran (16:9)** puis posée 
 | `?demo=1` | vitesse de la démo (1 normale, 2 deux fois plus vite…) |
 | `&lang=en\|fr\|de\|it` | langue de la démo et des textes (touche **L** pour en changer) |
 | `&tour=full` | le tour complet (environ 3 min) au lieu de la démo courte d'une minute (par défaut) |
+| `&intro=it` | la démo dit d'abord bonjour dans cette langue, puis passe à `&lang=` (ex. `?lang=fr&intro=it`) |
 | `&loop=0` | ne pas rejouer en boucle (par défaut la démo tourne en boucle) |
 | `&autostart=1` | lance la démo sans l'écran de départ (sinon : un toucher dans le téléphone autorise la voix) |
 | `&rec=1` | masque les commandes (qui n'apparaissent de toute façon qu'au survol de la souris) |
@@ -217,6 +225,19 @@ Une page pensée pour **être enregistrée en plein écran (16:9)** puis posée 
 
 Astuce d'enregistrement : soit utiliser les **vidéos toutes faites** (`docs/video/`), soit ouvrir la page en plein écran (F), toucher une fois l'écran de départ du téléphone pour avoir la voix, puis enregistrer
 l'écran. Le QR code encode l'adresse du site déployé ; en local il encode l'adresse de l'ordinateur sur le réseau (voir `BUSBUDDY_PUBLIC_URL`).
+
+---
+
+## 🎁 Pin's et souvenirs (découpe laser)
+
+`merch/bus-buddy-pins.dxf` : une planche **300 × 200 mm** de **22 pièces**, prête pour la découpe laser (acrylique ou contreplaqué de 3 mm) :
+6 modèles de pin's (🔵 rond · 🚌 bus · 🏠 « Le Foyer » · 💜 cœur · 🛑 panneau d'arrêt 701 · 💬 « Hello ! »), les 6 mêmes en **porte-clés** (anneau avec trou Ø 3,6 mm)
+et 10 mini badges Ø 25 mm. Calques : `CUT` (rouge, à découper), `ENGRAVE` (bleu, à graver), `SHEET` et `LABELS` (repères, à ne pas découper). Aperçu : `merch/bus-buddy-pins.png`.
+
+```
+python tools/make_pins_dxf.py                  # régénère le DXF et l'aperçu
+python tools/make_pins_dxf.py --sheet 400x300  # autre taille de plaque
+```
 
 ---
 

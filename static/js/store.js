@@ -37,6 +37,10 @@ export const demoLoop = params.get('loop') === '1';
 // &tour=pitch : la démo courte d'une minute (bonjour, vérifier, acheter, aide, notifications) ; sinon le tour complet
 export const demoTour = params.get('tour') === 'pitch' ? 'pitch' : 'full';
 export const demoAutostart = params.get('autostart') === '1';
+// &intro=it : la démo démarre dans cette langue (on y dit bonjour) puis passe à la langue demandée par ?lang= (ex. ?lang=fr&intro=it)
+export const demoFinalLang = store.lang;
+export const demoIntro = demo && LANGS.includes(params.get('intro')) && params.get('intro') !== store.lang ? params.get('intro') : null;
+if (demoIntro) store.lang = demoIntro;
 export const manual = params.get('manual') === '1';
 export const speedSeconds = Number(params.get('speed') ?? (manual || demo ? 0 : 30));
 
