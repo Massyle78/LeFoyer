@@ -2,6 +2,7 @@
 //   /present          (ou static/present.html)
 //   ?demo=1           vitesse de la démo (1 normale, 2 deux fois plus vite…)       [défaut 1]
 //   ?lang=en|fr|de|it langue de la démo et des textes de la page                    [défaut en]
+//   ?tour=full        le tour complet (environ 3 min) au lieu de la démo courte d'une minute (par défaut)
 //   ?loop=0           ne pas rejouer la démo en boucle                              [défaut : en boucle]
 //   ?autostart=1      lance la démo sans l'écran de départ (mais la voix peut être bloquée par le navigateur)
 //   ?rec=1            masque les commandes (enregistrement) ; touches : F plein écran, R relancer, L langue
@@ -35,6 +36,7 @@ function demoUrl() {
   const q = new URLSearchParams();
   q.set('demo', params.get('demo') || '1');
   q.set('lang', lang);
+  q.set('tour', params.get('tour') === 'full' ? 'full' : 'pitch'); // par défaut : la démo courte d'une minute
   if (params.get('loop') !== '0') q.set('loop', '1');
   if (params.get('autostart') === '1') q.set('autostart', '1');
   q.set('r', String(Date.now())); // jamais de version en cache
@@ -52,7 +54,7 @@ function applyTexts() {
 // --- diaporama des photos de l'équipe -----------------------------------------------------------------
 const slides = [...document.querySelectorAll('#slides img')];
 let current = 0;
-setInterval(() => {
+function nextSlide() {
   const old = slides[current];
   slides.forEach((s) => s.classList.remove('prev'));
   old.classList.remove('on');
@@ -62,7 +64,7 @@ setInterval(() => {
   next.style.animation = 'none'; void next.offsetWidth; next.style.animation = ''; // relance le lent zoom
   next.classList.add('on');
   setTimeout(() => old.classList.remove('prev'), 1600);
-}, 5500);
+}
 
 // --- commandes -----------------------------------------------------------------------------------------------
 const actions = {
@@ -79,4 +81,15 @@ addEventListener('keydown', (e) => {
 
 if (params.get('rec') === '1') document.body.classList.add('rec');
 applyTexts();
-loadDemo();
+
+// ?compose=base|0..4 : page « à vide » pour tools/record_demo.py (téléphone et photo en vert, ou une seule photo fixe)
+const compose = params.get('compose');
+if (compose !== null) {
+  document.body.classList.add('compose', 'rec');
+  if (params.get('key') === 'm') document.body.classList.add('key-m');
+  slides.forEach((s) => s.classList.remove('on'));
+  if (compose !== 'base') slides[Number(compose)]?.classList.add('on');
+} else {
+  setInterval(nextSlide, 5500);
+  loadDemo();
+}

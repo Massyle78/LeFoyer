@@ -4,7 +4,7 @@ import { createDemo } from './demo.js';
 import { goesTo, alarmPhase, lineFromQr } from './logic.js';
 import { languageName, loadLanguages, makeT, speechLang } from './i18n.js';
 import { SimulatedPosition } from './position.js';
-import { LANGS, demo, demoAutostart, demoLoop, demoSpeed, manual, params, save, speedSeconds, store } from './store.js';
+import { LANGS, demo, demoAutostart, demoLoop, demoSpeed, demoTour, manual, params, save, speedSeconds, store } from './store.js';
 import { alarmHtml, demoCaptionHtml, demoStartHtml, renderView, statusBandHtml } from './views.js';
 
 const screen = document.getElementById('screen');
@@ -153,7 +153,7 @@ const demoApi = {
 
 function startDemo() {
   overlay.innerHTML = '';
-  demoRun = createDemo({ speed: demoSpeed, loop: demoLoop, api: demoApi });
+  demoRun = createDemo({ speed: demoSpeed, loop: demoLoop, tour: demoTour, api: demoApi });
   refreshCaption();
   demoRun.start();
 }
@@ -343,6 +343,7 @@ const actions = {
     url.hash = '#/home';
     history.replaceState({ view: 'home', params: {}, depth: 0 }, '', url);
     draw();
+    preloadImages();
   },
   'change-line': leaveLine,
   'demo-start': startDemo,
@@ -411,6 +412,7 @@ async function start() {
     history.replaceState({ view: previewView, params: JSON.parse(params.get('p') || '{}'), depth: 1 }, '', `#/${previewView}`);
   }
   draw();
+  preloadImages();
 
   // Démo automatique (?demo=2) : un écran de départ (un toucher autorise la voix et la vibration), ou &autostart=1.
   if (demo) {
@@ -424,5 +426,23 @@ async function start() {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 }
+
+/** Charge d'avance les icônes (et les pictogrammes de la ligne) : aucun disque vide quand on ouvre l'aide ou une carte. */
+function preloadImages() {
+  const icons = ['hello', 'bus_check', 'ticket_buy', 'help_hand', 'getting_out', 'seat', 'lost', 'unwell', 'ramp', 'front_door',
+    'more_time', 'bell', 'repeat', 'logo'];
+  const urls = icons.map((name) => new URL(`static/img/icons/${name}.png`, document.baseURI).href);
+  for (const stop of line?.stops ?? []) {
+    const file = stop.picto ?? stop.photo;
+    if (file) urls.push(new URL(`static/img/stops/${file}`, document.baseURI).href);
+  }
+  for (const url of urls) {
+    const image = new Image();
+    image.src = url;
+    image.decode?.().catch(() => {}); // décodée d'avance : pas de carte vide au premier affichage
+    preloaded.push(image); // on garde une référence pour que le navigateur conserve l'image décodée
+  }
+}
+const preloaded = [];
 
 start();

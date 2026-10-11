@@ -48,3 +48,14 @@ body:hover #tools { opacity: .92; }
 body.rec #tools { display: none; }
 #tools button { font: 600 14px Helvetica, Arial, sans-serif; border: 0; border-radius: 999px; padding: 9px 16px; background: #1D05A9; color: #fff; cursor: pointer; }
 #tools button:hover { background: #3a1fd0; }
+
+/* --- ?compose=… : page « à vide » pour l'enregistrement vidéo (tools/record_demo.py) : zones vertes à remplir, rien ne bouge --- */
+.compose *, .compose *::before { animation: none !important; transition: none !important; }
+.compose #tools { display: none; }
+.compose { --key: #00ff00; }
+.compose.key-m { --key: #ff00ff; } /* 2e prise avec une autre couleur : l'écart entre les deux donne l'opacité exacte des bords */
+.compose .screen { background: var(--key); }
+.compose .screen iframe { display: none; }
+.compose .slides { background: var(--key); }
+.compose .slides img { transform: scale(1.02) !important; }
+.compose .slides img:not(.on) { opacity: 0; }

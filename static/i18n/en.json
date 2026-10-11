@@ -114,6 +114,13 @@
   "demo.c.settings": "Settings: voice, colours and vibration.",
   "demo.c.lang": "The language can be changed at any time.",
   "demo.c.end": "End of the demo. Scan a QR code to start.",
+  "demo.p.line": "Start: scan the QR code in the bus.",
+  "demo.p.hello": "1 · Say hello: one touch, the phone speaks for me.",
+  "demo.p.verify": "2 · Verify the bus: red, wrong bus · green, right bus.",
+  "demo.p.buy": "3 · Buy a ticket: the request is shown and spoken.",
+  "demo.p.help": "4 · Need help? Urgent help, or ask to repeat slowly.",
+  "demo.p.notify": "5 · Notifications: I choose my stop, the phone warns me.",
+  "demo.p.end": "Bus Buddy: take the bus on your own. Scan the QR code to try it.",
 
   "demo.next": "next stop (demo)"
 }

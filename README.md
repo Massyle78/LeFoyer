@@ -103,6 +103,9 @@ Bus Buddy se construit avec les personnes concernées : on dessine, on imprime d
     <td align="center"><img src="docs/photos/photo-3.jpg" width="300"><br><sub>✌️ Bonne humeur devant le tableau du projet</sub></td>
     <td align="center"><img src="docs/photos/photo-4.jpg" width="300"><br><sub>💻 Tout le monde au travail pendant le hackathon</sub></td>
   </tr>
+  <tr>
+    <td align="center" colspan="2"><img src="docs/photos/photo-5.jpg" width="300"><br><sub>🤝 On avance ensemble, ordinateurs, câbles et bonne humeur</sub></td>
+  </tr>
 </table>
 
 ---
@@ -165,14 +168,39 @@ La démo se joue sur la **ligne par défaut (701)**, avec ses pictogrammes d'arr
 
 - `&autostart=1` : démarre sans l'écran de départ (voix et vibration peuvent alors être bloquées par le navigateur) ;
 - `&loop=1` : rejoue la démo en boucle ;
+- `&tour=pitch` : la **démo courte d'une minute** (voir ci-dessous) au lieu du tour complet ;
 - exemple : `/?demo=2&lang=fr&loop=1`.
+
+### ⏱️ La démo d'une minute : `&tour=pitch`
+
+Pensée pour une présentation, dans l'ordre d'un vrai trajet :
+👋 **bonjour** (un toucher, le téléphone parle) → 🚌 **vérifier le bus** (🔴 pas le bon bus, puis 🟢 le bon) → 🎫 **acheter un billet** (la phrase s'affiche en grand) →
+🙋 **besoin d'aide** (🔴 urgence, puis « répétez doucement » en un toucher) → 🔔 **notifications** (je choisis mon arrêt : 🟠 « préparez-vous » puis 🔴 « descendez » avec vibrations).
+Exemple : https://massyle78.github.io/LeFoyer/?demo=1&tour=pitch&lang=fr
+
+### 🎞️ Vidéo de la démo (1 minute)
+
+<p align="center">
+  <a href="docs/video/bus-buddy-demo.mp4"><img src="docs/video/poster.jpg" alt="Vidéo de la démo : équipe, démo et QR code" width="640"></a><br>
+  <sub>▶️ <a href="docs/video/bus-buddy-demo.mp4"><b>Version diapositive 16:9</b></a> (équipe · démo · QR code, 1920×1080) ·
+  <a href="docs/video/bus-buddy-demo-phone.mp4"><b>Téléphone seul</b></a> (780×1600) · vidéos muettes : le bandeau explique chaque étape</sub>
+</p>
+
+Les vidéos sont générées automatiquement par `tools/record_demo.py` (Chrome sans interface + PyAV) :
+
+```
+python app.py                                          # dans un autre terminal
+python tools/record_demo.py http://localhost:5000      # docs/video/bus-buddy-demo.mp4 (diapo)
+python tools/record_demo.py http://localhost:5000 --phone              # téléphone seul
+python tools/record_demo.py https://massyle78.github.io/LeFoyer --lang fr --out docs/video/demo-fr.mp4
+```
 
 ---
 
 ## 🖥️ Page de présentation (pour une diapositive)
 
 Une page pensée pour **être enregistrée en plein écran (16:9)** puis posée au milieu d'une diapositive : à gauche 📸 les photos de l'équipe
-(diaporama), au centre 📱 un téléphone qui joue la **démo automatique et interactive** (on peut aussi toucher l'écran), à droite 🔳 le
+(diaporama de 5 photos), au centre 📱 un téléphone qui joue la **démo d'une minute, automatique et interactive** (on peut aussi toucher l'écran), à droite 🔳 le
 **QR code de la ligne 701** pour que le public l'essaie.
 
 👉 https://massyle78.github.io/LeFoyer/present/ (en local : `http://localhost:5000/present`)
@@ -181,12 +209,13 @@ Une page pensée pour **être enregistrée en plein écran (16:9)** puis posée 
 |---|---|
 | `?demo=1` | vitesse de la démo (1 normale, 2 deux fois plus vite…) |
 | `&lang=en\|fr\|de\|it` | langue de la démo et des textes (touche **L** pour en changer) |
+| `&tour=full` | le tour complet (environ 3 min) au lieu de la démo courte d'une minute (par défaut) |
 | `&loop=0` | ne pas rejouer en boucle (par défaut la démo tourne en boucle) |
 | `&autostart=1` | lance la démo sans l'écran de départ (sinon : un toucher dans le téléphone autorise la voix) |
 | `&rec=1` | masque les commandes (qui n'apparaissent de toute façon qu'au survol de la souris) |
 | **F** · **R** | plein écran · relancer la démo |
 
-Astuce d'enregistrement : ouvrir la page en plein écran (F), toucher une fois l'écran de départ du téléphone pour avoir la voix, puis enregistrer
+Astuce d'enregistrement : soit utiliser les **vidéos toutes faites** (`docs/video/`), soit ouvrir la page en plein écran (F), toucher une fois l'écran de départ du téléphone pour avoir la voix, puis enregistrer
 l'écran. Le QR code encode l'adresse du site déployé ; en local il encode l'adresse de l'ordinateur sur le réseau (voir `BUSBUDDY_PUBLIC_URL`).
 
 ---
@@ -263,7 +292,7 @@ python tools/screenshots.py http://localhost:5000  # depuis le serveur local
 | Remplacer les **icônes principales** (bonjour, billet, aide…) | `python tools/import_icons.py "<main icons.zip>"` : dessins noirs → PNG transparents dans `static/img/icons/` |
 | Ajouter un **service d'accessibilité** (lecture, haptique, braille…) | `static/js/a11y.js` : créer un objet `{ name, speak?, feedback?, stop? }` et l'enregistrer avec `register()` dans `main.js` |
 | Brancher la **vraie position** (GPS / API temps réel) | remplacer `SimulatedPosition` (`static/js/position.js`) : il suffit de fournir `state = { next, atStop }` et d'appeler `onChange` |
-| Modifier la **démo automatique** | `static/js/demo.js` (le scénario `tour()`) et les textes `demo.c.*` dans `static/i18n/*.json` |
+| Modifier la **démo automatique** | `static/js/demo.js` (les scénarios `fullTour()` et `pitch()`) et les textes `demo.c.*` dans `static/i18n/*.json` |
 | Couleurs, tailles | variables en tête de `static/css/app.css` |
 | Régénérer **icônes et photos** depuis la charte | `python tools/build_assets.py` (nécessite pillow) |
 

@@ -34,6 +34,8 @@ if (params.get('line') && params.get('line') !== store.line) {
 export const demoSpeed = parseDemo(params.get('demo'));
 export const demo = demoSpeed > 0;
 export const demoLoop = params.get('loop') === '1';
+// &tour=pitch : la démo courte d'une minute (bonjour, vérifier, acheter, aide, notifications) ; sinon le tour complet
+export const demoTour = params.get('tour') === 'pitch' ? 'pitch' : 'full';
 export const demoAutostart = params.get('autostart') === '1';
 export const manual = params.get('manual') === '1';
 export const speedSeconds = Number(params.get('speed') ?? (manual || demo ? 0 : 30));

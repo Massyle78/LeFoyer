@@ -114,6 +114,13 @@
   "demo.c.settings": "Impostazioni: voce, colori e vibrazione.",
   "demo.c.lang": "La lingua si può cambiare in qualsiasi momento.",
   "demo.c.end": "Fine della demo. Scansiona un codice QR per iniziare.",
+  "demo.p.line": "Inizio: scansiono il codice QR sull'autobus.",
+  "demo.p.hello": "1 · Dire ciao: un tocco, il telefono parla per me.",
+  "demo.p.verify": "2 · Verificare l'autobus: rosso, autobus sbagliato · verde, autobus giusto.",
+  "demo.p.buy": "3 · Comprare un biglietto: la richiesta viene mostrata e detta.",
+  "demo.p.help": "4 · Serve aiuto? Un'emergenza, o chiedere di ripetere lentamente.",
+  "demo.p.notify": "5 · Notifiche: scelgo la mia fermata, il telefono mi avvisa.",
+  "demo.p.end": "Bus Buddy: prendere l'autobus in autonomia. Scansiona il codice QR per provare.",
 
   "demo.next": "prossima fermata (demo)"
 }

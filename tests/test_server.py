@@ -1,4 +1,4 @@
-"""Tests du serveur : python -m unittest discover -s tests -p "test_*.py" """
+﻿"""Tests du serveur : python -m unittest discover -s tests -p "test_*.py" """
 import json
 import sys
 import unittest
@@ -28,7 +28,7 @@ class ServerTest(unittest.TestCase):
         page = self.client.get("/static/present.html").data.decode()
         for needle in ("../qr/701.svg", "js/present.js", "img/team/team-1.jpg", 'id="demo"'):
             self.assertIn(needle, page)
-        for path in ("/static/js/present.js", "/static/css/present.css", "/static/img/team/team-1.jpg"):
+        for path in ("/static/js/present.js", "/static/css/present.css", "/static/img/team/team-1.jpg", "/static/img/team/team-5.jpg"):
             self.assertEqual(self.client.get(path).status_code, 200, path)
 
     def test_qr_par_ligne(self):
@@ -87,3 +87,4 @@ class ServerTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

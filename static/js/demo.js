@@ -10,7 +10,7 @@
 
 const STOP = Symbol('demo-stop');
 
-export function createDemo({ speed, loop, api }) {
+export function createDemo({ speed, loop, tour: which = 'full', api }) {
   let stopped = false;
 
   /** Pause de `ms` (divisée par la vitesse), jamais plus courte que `min` (les animations ont une durée incompressible). */
@@ -74,7 +74,65 @@ export function createDemo({ speed, loop, api }) {
     }
   }
 
-  async function tour() {
+  /** Démo courte d'environ une minute, pour une présentation : bonjour → vérifier → acheter → aide → notifications. */
+  async function pitch() {
+    api.reset();
+    await say('demo.p.line', 1600);
+    await tap(`[data-act="line"][data-arg="${api.defaultLine()}"]`, { after: 1100 });
+
+    // 1. bonjour : un toucher, l'appli parle à ma place
+    await say('demo.p.hello', 1000);
+    await tap('[data-nav*="hello"]', { after: 1500 });
+    await backToHome();
+
+    // 2. vérifier le bus : rouge (pas ce bus) puis vert (c'est le bon)
+    await say('demo.p.verify', 1000);
+    await tap('[data-nav*="check"]', { after: 1000 });
+    await tap('.cta', { after: 1600 });
+    await backToHome();
+    await tap('[data-nav*="check"]', { after: 1000 });
+    await carouselNext(2);
+    await tap('.cta', { after: 1600 });
+    await backToHome();
+
+    // 3. acheter un billet : la phrase s'affiche en grand et se dit
+    await say('demo.p.buy', 1000);
+    await tap('[data-nav*="ticket"]', { after: 1000 });
+    await carouselNext(1);
+    await tap('.cta', { after: 1800 });
+    await backToHome();
+
+    // 4. besoin d'aide : urgence (rouge), puis « répétez doucement » en un toucher
+    await say('demo.p.help', 1000);
+    await tap('[data-nav*="help"]', { after: 800 });
+    await tap('[data-nav*="unwell"]', { after: 1700 });
+    await backToHome();
+    await tap('.bubble', { after: 1500 });
+    await backToHome();
+
+    // 5. notifications : je choisis mon arrêt, le téléphone me prévient (orange puis rouge, avec vibrations)
+    await say('demo.p.notify', 1000);
+    await tap('[data-nav*="help"]', { after: 700 });
+    await tap('[data-nav*="out"]', { after: 700 });
+    await tap('[data-nav*="remind"]', { after: 1000 });
+    await carouselNext(1);
+    await tap('.cta', { after: 900 });
+    api.advanceBus(); // le bus s'arrête à l'arrêt précédent le mien (vert)
+    await sleep(1500, 600);
+    api.caption('demo.c.soon');
+    api.advanceBus(); // mon arrêt est le prochain : orange
+    await sleep(2600, 1200);
+    await tap('#overlay [data-act="alarm-ok"]', { after: 500 });
+    api.caption('demo.c.now');
+    api.advanceBus(); // le bus est à mon arrêt : rouge
+    await sleep(2800, 1400);
+    await tap('#overlay [data-act="alarm-ok"]', { after: 900 });
+
+    api.reset();
+    await say('demo.p.end', 3000);
+  }
+
+  async function fullTour() {
     api.reset();
     await say('demo.c.line', 3000);
     await tap(`[data-act="line"][data-arg="${api.defaultLine()}"]`, { after: 1400 }); // la ligne par défaut (701)
@@ -160,7 +218,7 @@ export function createDemo({ speed, loop, api }) {
       stopped = false;
       try {
         do {
-          await tour();
+          await (which === 'pitch' ? pitch() : fullTour());
         } while (loop);
       } catch (error) {
         if (error !== STOP) console.warn(error);
