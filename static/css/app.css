@@ -41,6 +41,7 @@ button:focus-visible { outline: 4px solid var(--violet-2); outline-offset: 3px; 
 .num { display: block; font-size: calc(var(--u) * 112); font-weight: 700; line-height: .9; letter-spacing: -.02em; }
 .num.small { font-size: calc(var(--u) * 64); }
 .dir { display: block; flex: 1; min-width: 0; }
+.dir strong.long { font-size: calc(var(--u) * 30); letter-spacing: -.01em; overflow-wrap: normal; } /* noms longs (Bourdonnette) : on réduit plutôt que de couper le mot */
 .dir small { display: block; font-size: calc(var(--u) * 32); line-height: 1.1; }
 .dir strong { display: block; font-size: calc(var(--u) * 58); font-weight: 400; text-transform: uppercase; line-height: 1.04;
   overflow-wrap: anywhere; }
@@ -153,6 +154,11 @@ h1 { font-family: var(--serif); font-weight: 500; color: var(--violet); font-siz
 .bigstop { background: #fff; border-radius: calc(var(--u) * 56); padding: calc(var(--u) * 26) calc(var(--u) * 26) 0; border: calc(var(--u) * 12) solid var(--tone, transparent); }
 .bphoto { aspect-ratio: 1 / .4; border-radius: calc(var(--u) * 40); overflow: hidden; }
 .bphoto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* pictogrammes d'arrêts (ligne 701) : carrés avec leur propre fond, jamais rognés */
+img.picto { object-fit: contain !important; background: transparent; }
+.simg:has(.picto), .cphoto:has(.picto), .mphoto:has(.picto) { background: transparent; }
+.bphoto:has(.picto) { aspect-ratio: auto; background: transparent; display: flex; justify-content: center; }
+.bphoto .picto { width: auto; height: calc(var(--u) * 360); }
 .bpill { background: var(--violet); color: #fff; border-radius: 999px; margin: calc(var(--u) * 24) calc(var(--u) * -26) 0; min-height: calc(var(--u) * 120);
   display: grid; place-items: center; font-size: max(20px, calc(var(--u) * 52)); font-weight: 500; text-align: center; padding: 0 20px; }
 .left { font-family: var(--serif); font-weight: 600; background: var(--tone, var(--violet)); color: var(--on-tone, #fff); font-size: max(26px, calc(var(--u) * 72)); text-align: center;

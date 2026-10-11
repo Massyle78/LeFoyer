@@ -51,8 +51,9 @@ L'application est hébergée sur **GitHub Pages** et se met à jour à chaque `g
 | | Adresse |
 |---|---|
 | 🏠 **Accueil** (choix du bus) | https://massyle78.github.io/LeFoyer/ |
-| 🚌 **Ligne 8** (comme le QR du bus) | https://massyle78.github.io/LeFoyer/?line=8 |
-| 🚌 **Ligne 123** | https://massyle78.github.io/LeFoyer/?line=123 |
+| 🚌 **Ligne 701 → Bourdonnette** ⭐ ligne par défaut (comme le QR du bus) | https://massyle78.github.io/LeFoyer/?line=701 |
+| 🚌 **Ligne 701 → La Plantaz** (sens inverse) | https://massyle78.github.io/LeFoyer/?line=701-tolochenaz |
+| 🧪 Lignes de test fictives | https://massyle78.github.io/LeFoyer/?line=8 · https://massyle78.github.io/LeFoyer/?line=123 |
 | 🔳 **QR codes à imprimer** | https://massyle78.github.io/LeFoyer/qr/ |
 | 🎬 **Démo automatique** | https://massyle78.github.io/LeFoyer/?demo=2 |
 | ⚡ **Démo rapide** (×4) | https://massyle78.github.io/LeFoyer/?demo=4 |
@@ -64,6 +65,24 @@ L'application est hébergée sur **GitHub Pages** et se met à jour à chaque `g
 <p align="center">
   <img src="docs/qr-app.svg" alt="QR code de l'application" width="170">
 </p>
+
+---
+
+## 🚌 La ligne par défaut : le 701 Morges ⇄ Lausanne
+
+Une **vraie ligne** de la région lausannoise (MBC) : **Tolochenaz, La Plantaz → Morges → Préverenges → Denges → St-Sulpice VD → Ecublens VD → Lausanne, Bourdonnette**,
+soit **24 arrêts par sens**. Chaque arrêt a son **pictogramme** (une idée par image, contours épais, couleur = commune), pensé pour être reconnu
+d'un coup d'œil sans savoir lire : 🌱 La Plantaz · 🚆 Gare de Morges · 🎭 Casino · ⛪ Temple · 🎡 Bief · 🎓 Allée de Dorigny · 🚇 Bourdonnette…
+
+À Morges, le bus fait une boucle à sens unique : vers Bourdonnette il dessert *Casino* et *Temple*, vers Tolochenaz *St-Louis* et *Charpentiers*.
+Il y a donc **deux entrées de ligne** (un QR code par sens) : `701` (→ Bourdonnette, par défaut) et `701-tolochenaz` (→ La Plantaz).
+
+<p align="center">
+  <img src="docs/ligne-701.png" alt="Les pictogrammes des arrêts de la ligne 701" width="720">
+</p>
+
+> ℹ️ Les pictogrammes viennent du dossier « new graphic chart ». Certains sont à valider sur le terrain (statuts dans `stops.json` du paquet) :
+> *Vogéaz*, *Taudaz* et *En Champagny* sont des images provisoires. Les lignes **8** et **123** restent disponibles comme lignes de test fictives.
 
 ---
 
@@ -82,7 +101,7 @@ L'application est hébergée sur **GitHub Pages** et se met à jour à chaque `g
   </tr>
   <tr>
     <td align="center"><img src="docs/screenshots/07-ramp-card.png" width="190"><br><b>🟠 « J'ai besoin d'une rampe »</b><br><sub>carte à montrer, dite à voix haute</sub></td>
-    <td align="center"><img src="docs/screenshots/08-mystop-calm.png" width="190"><br><b>📍 Mon arrêt</b><br><sub>photo, arrêts restants, bande verte</sub></td>
+    <td align="center"><img src="docs/screenshots/08-mystop-calm.png" width="190"><br><b>📍 Mon arrêt</b><br><sub>pictogramme, arrêts restants, bande verte</sub></td>
     <td align="center"><img src="docs/screenshots/11-settings.png" width="190"><br><b>⚙️ Réglages</b><br><sub>voix, couleurs, vibration, changer de bus</sub></td>
   </tr>
   <tr>
@@ -96,7 +115,7 @@ L'application est hébergée sur **GitHub Pages** et se met à jour à chaque `g
 
 ## ✨ Le parcours d'un voyageur
 
-1. 🔳 **Choisir son bus** : scan du QR du bus (appareil photo du téléphone : le QR ouvre `/?line=8`), ou bouton **Scanner le QR code**
+1. 🔳 **Choisir son bus** : scan du QR du bus (appareil photo du téléphone : le QR ouvre `/?line=701`), ou bouton **Scanner le QR code**
    intégré quand le navigateur sait lire les QR codes (en HTTPS ou sur `localhost`), ou choix de la ligne dans la liste.
    Le numéro de ligne en haut (ou **Réglages › Changer de bus**) ramène à ce choix.
 2. 👋 **Accueil** : *Dire bonjour*, *Vérifier la destination du bus*, *Acheter un billet*, *Aide*.
@@ -105,7 +124,7 @@ L'application est hébergée sur **GitHub Pages** et se met à jour à chaque `g
 4. 🙋 **Aide** : *Descendre* (rampe, porte avant, plus de temps, **me rappeler mon arrêt**), *Montrer mon billet aux contrôleurs*,
    *Je suis perdu(e)*, *Je ne me sens pas bien*. Ces demandes s'affichent en grand et se disent **pour les personnes autour**.
 5. 💬 **Bulle « Répétez doucement »** (en bas à droite) : *Répétez doucement* / *Une place assise*.
-6. 📍 **Mon arrêt** : photo, nombre d'arrêts restants, frise avec « ··· » (au plus 4 repères affichés) ; alarme plein écran
+6. 📍 **Mon arrêt** : pictogramme (ou photo), nombre d'arrêts restants, frise avec « ··· » (au plus 4 repères affichés) ; alarme plein écran
    (« Préparez-vous » puis « C'est votre arrêt ») avec voix, vibration et écran maintenu allumé.
 7. ⬅️ **Retour** partout (le bouton retour du téléphone fonctionne aussi). En bas : **⚙️ Réglages** puis les langues.
 
@@ -120,7 +139,7 @@ Un écran de départ demande un toucher (nécessaire pour que le navigateur auto
 🔳 choix de la ligne → 👆 tout parle au toucher → 🟢🔴 bon / mauvais bus → 🟠 aide pour descendre → 🔴 urgence →
 💬 « répétez doucement » → 📍 rappel de mon arrêt avec alarmes 🟠 puis 🔴 et vibrations → ⚙️ réglages → 🌍 changement de langue.
 
-La croix du bandeau l'arrête à tout moment.
+La démo se joue sur la **ligne par défaut (701)**. La croix du bandeau l'arrête à tout moment.
 
 - `&autostart=1` : démarre sans l'écran de départ (voix et vibration peuvent alors être bloquées par le navigateur) ;
 - `&loop=1` : rejoue la démo en boucle ;
@@ -167,10 +186,10 @@ python app.py                 # http://localhost:5000
 - `http://localhost:5000/` : la **page d'accueil est le choix du bus**.
 - `http://localhost:5000/?demo=2` : **démo automatique** (voir plus haut).
 - `http://localhost:5000/?manual=1` : démo à la main (bandeau « arrêt suivant » sous l'en-tête, ou touche **N**, pour faire avancer le bus).
-- `http://localhost:5000/qr` : un **QR code par ligne** (à imprimer et coller dans les bus). Le QR ouvre `/?line=8`.
+- `http://localhost:5000/qr` : un **QR code par ligne** (à imprimer et coller dans les bus). Le QR ouvre `/?line=701` (un QR par sens).
   Pour qu'un téléphone puisse les scanner, il doit être sur le même Wi-Fi ; l'adresse de l'ordinateur sur le réseau est détectée
   automatiquement. En production : `BUSBUDDY_PUBLIC_URL=https://mon-site.org python app.py`.
-- Paramètres d'adresse : `?line=8` (ouvre directement ce bus, c'est le QR code) · `?lang=fr|en|de|it` · `?demo=x` · `&autostart=1` · `&loop=1` ·
+- Paramètres d'adresse : `?line=701` (ouvre directement ce bus, c'est le QR code ; clé d'une ligne = un sens, ex. `701-tolochenaz`) · `?lang=fr|en|de|it` · `?demo=x` · `&autostart=1` · `&loop=1` ·
   `?manual=1` · `?speed=20` (le bus avance tout seul toutes les 20 s).
 - `/preview?q=lang%3Dfr%26line%3D8&q=...&scale=0.66` : plusieurs écrans côte à côte en taille téléphone (outil de développement ;
   `?view=help`, `?view=picker&p={"need":"ramp"}`, `&dest=lac` ouvrent directement un écran).
@@ -194,7 +213,8 @@ python tools/screenshots.py http://localhost:5000  # depuis le serveur local
 | Pour… | Fichier |
 |---|---|
 | Ajouter une **langue** | `static/i18n/xx.json` (copier `en.json`) + ajouter le code dans `LANGS` (`static/js/store.js`) et la voix dans `_speech` |
-| Changer les **lignes / arrêts** | `static/data/lines.json` (`photo` optionnelle dans `static/img/stops/`) |
+| Changer les **lignes / arrêts** | `static/data/lines.json` (un arrêt a un `picto` ou une `photo` dans `static/img/stops/` ; `"default"` = ligne par défaut, en tête de liste et utilisée par la démo) |
+| **Importer une nouvelle ligne avec pictogrammes** | `python tools/import_line.py "<dossier ou .zip du paquet>" [--default]` : copie les pictogrammes, crée une entrée par sens et un QR code par sens |
 | Ajouter un **service d'accessibilité** (lecture, haptique, braille…) | `static/js/a11y.js` : créer un objet `{ name, speak?, feedback?, stop? }` et l'enregistrer avec `register()` dans `main.js` |
 | Brancher la **vraie position** (GPS / API temps réel) | remplacer `SimulatedPosition` (`static/js/position.js`) : il suffit de fournir `state = { next, atStop }` et d'appeler `onChange` |
 | Modifier la **démo automatique** | `static/js/demo.js` (le scénario `tour()`) et les textes `demo.c.*` dans `static/i18n/*.json` |

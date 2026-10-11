@@ -12,6 +12,7 @@ const overlay = document.getElementById('overlay');
 const captionBar = document.getElementById('democap');
 
 let allLines = [];
+let defaultLine = null; // ligne par défaut (lines.json) : la démo et les exemples partent d'elle
 let line = null;
 let position = null;
 const shownAlarms = new Set();
@@ -147,6 +148,7 @@ const demoApi = {
   advanceBus: () => position?.advance(),
   lang: () => store.lang,
   reset: () => leaveLine(),
+  defaultLine: () => defaultLine,
 };
 
 function startDemo() {
@@ -386,7 +388,9 @@ function chooseLine(number) {
 
 async function start() {
   await loadLanguages();
-  allLines = (await (await fetch('static/data/lines.json')).json()).lines;
+  const data = await (await fetch('static/data/lines.json')).json();
+  allLines = data.lines;
+  defaultLine = allLines.find((l) => l.number === data.default)?.number ?? allLines[0]?.number ?? null;
   register(speechService);
   register(vibrationService);
   register(wakeLockService);

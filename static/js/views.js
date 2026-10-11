@@ -1,4 +1,4 @@
-﻿// Écrans (HTML en chaîne). Chaque vue reçoit un contexte `c` :
+// Écrans (HTML en chaîne). Chaque vue reçoit un contexte `c` :
 //   { t, lang, line, stops, count, pos:{next,atStop}, destIndex, voice, languages:[{code,name}], demo }
 // et renvoie du HTML. La navigation et les actions sont décrites par des attributs data-* :
 //   data-say="texte"      dire ce texte dès le toucher
@@ -23,7 +23,10 @@ const ASSETS = new URL('static/', document.baseURI).href;
 export const ico = (name, cls = '') =>
   `<span class="ico ${cls}" style="--i:url(${ASSETS}img/icons/${name}.png)" aria-hidden="true"></span>`;
 
-const photoUrl = (stop) => (stop.photo ? `static/img/stops/${stop.photo}` : null);
+// Un arrêt a un pictogramme (ligne avec pictogrammes, ex. 701), sinon une photo, sinon une porte de bus.
+const photoUrl = (stop) => (stop.picto || stop.photo ? `static/img/stops/${stop.picto ?? stop.photo}` : null);
+// Numéro affiché d'une ligne : « 701 » pour les deux sens de la ligne 701 (la clé interne reste unique).
+const lineLabel = (line) => line.label ?? line.number;
 
 // --- composants -------------------------------------------------------------------------------
 function tile({ icon, label, say, nav, act, arg }) {
@@ -70,7 +73,7 @@ function heading(title, sub) {
 
 function stopImage(stop) {
   const url = photoUrl(stop);
-  return url ? `<img src="${url}" alt="" draggable="false">` : `<span class="noimg">${ico('front_door')}</span>`;
+  return url ? `<img class="${stop.picto ? 'picto' : ''}" src="${url}" alt="" draggable="false">` : `<span class="noimg">${ico('front_door')}</span>`;
 }
 
 function header(c) {
@@ -81,8 +84,8 @@ function header(c) {
   // Toucher le numéro / la direction = changer de bus (retour au choix de la ligne)
   const left = c.line
     ? `<button class="busid" type="button" data-act="change-line" aria-label="${esc(c.t('lines.change'))}">
-         <span class="num">${esc(c.line.number)}</span>
-         <span class="dir"><small>${esc(c.t('common.direction'))}</small><strong>${esc(c.stops.at(-1).name)}</strong></span></button>`
+         <span class="num ${lineLabel(c.line).length > 3 ? 'small' : ''}">${esc(lineLabel(c.line))}</span>
+         <span class="dir"><small>${esc(c.t('common.direction'))}</small><strong class="${c.stops.at(-1).name.length > 9 ? 'long' : ''}">${esc(c.stops.at(-1).name)}</strong></span></button>`
     : `<div class="busid"><span class="num small">Bus</span><span class="dir"><strong>Bus Buddy</strong></span></div>`;
   return `<header class="top">${left}
     <button class="voice" type="button" data-act="toggle" data-arg="voice" aria-label="${esc(voice)}" aria-pressed="${c.voice}">
@@ -181,8 +184,8 @@ function leftLabel(c, left) {
 const views = {
   lines(c) {
     const rows = c.allLines
-      .map((l) => `<button class="row" type="button" data-say="${esc(`${l.number}, ${l.stops.at(-1).name}`)}" data-act="line" data-arg="${esc(l.number)}">
-          <b>${esc(l.number)}</b><span>${esc(l.stops.at(-1).name)}</span></button>`)
+      .map((l) => `<button class="row" type="button" data-say="${esc(`${lineLabel(l)}, ${l.stops.at(-1).name}`)}" data-act="line" data-arg="${esc(l.number)}">
+          <b>${esc(lineLabel(l))}</b><span>${esc(l.stops.at(-1).name)}</span></button>`)
       .join('');
     // Page d'accueil : on choisit son bus en scannant le QR code (appareil photo du téléphone, ou scanner intégré
     // quand le navigateur le permet) ou dans la liste des lignes.
@@ -281,7 +284,7 @@ const views = {
       : '<svg viewBox="0 0 100 100" class="mark no"><circle cx="50" cy="50" r="46"/><path d="M33 33l34 34M67 33L33 67" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/></svg>';
     const body = `<section class="card tone-${yes ? 'ok' : 'stop'}">${mark}<p class="big">${esc(sentence)}</p>
         <div class="cstop"><div class="cphoto">${stopImage(s)}</div><strong>${esc(s.name)}</strong></div>
-        <p class="sub">${esc(c.t('answer.sub', { line: c.line.number, terminus: c.stops.at(-1).name }))}</p>
+        <p class="sub">${esc(c.t('answer.sub', { line: lineLabel(c.line), terminus: c.stops.at(-1).name }))}</p>
         <button class="say" type="button" data-say="${esc(sentence)}" data-act="noop">${esc(c.t('common.say_again'))}</button>
       </section>`;
     return page(c, body, { withBubble: false, cls: 'cardpage' });

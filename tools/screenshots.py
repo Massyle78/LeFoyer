@@ -37,20 +37,19 @@ def p(**kw):
 # (nom du fichier, adresse, durée d'attente virtuelle en ms)
 SHOTS = [
     ("01-lines", "/?lang=en", 5000),
-    ("02-home", "/?lang=en&line=8", 5000),
-    ("03-picker", f"/?lang=en&line=8&view=picker&p={p(need='check')}", 6000),
-    ("04-answer-yes", f"/?lang=en&line=8&view=answer&p={p(stop='hopital', yes=True)}", 5000),
-    ("05-answer-no", f"/?lang=en&line=8&view=answer&p={p(stop='gare', yes=False)}", 5000),
-    ("06-help", f"/?lang=en&line=8&view=help", 5000),
-    ("07-ramp-card", f"/?lang=en&line=8&view=card&p={p(phrase='ramp', icon='ramp', stop='parc')}", 5000),
-    ("08-mystop-calm", "/?lang=en&line=8&dest=lac&view=mystop", 5000),
-    ("09-alarm-soon", "/?lang=en&line=8&dest=hopital&view=mystop&speed=2", 4800),
-    ("10-alarm-now", "/?lang=en&line=8&dest=hopital&view=mystop&speed=2", 7500),
-    ("11-settings", "/?lang=en&line=8&view=settings", 5000),
+    ("02-home", "/?lang=en&line=701", 5000),
+    ("03-picker", f"/?lang=en&line=701&view=picker&p={p(need='check')}", 6000),
+    ("04-answer-yes", f"/?lang=en&line=701&view=answer&p={p(stop='morges-gare', yes=True)}", 5000),
+    ("05-answer-no", f"/?lang=en&line=701&view=answer&p={p(stop='tolochenaz-la-plantaz', yes=False)}", 5000),
+    ("06-help", "/?lang=en&line=701&view=help", 5000),
+    ("07-ramp-card", f"/?lang=en&line=701&view=card&p={p(phrase='ramp', icon='ramp', stop='morges-casino')}", 5000),
+    ("08-mystop-calm", "/?lang=en&line=701&dest=morges-gare&view=mystop", 5000),
+    ("09-alarm-soon", "/?lang=en&line=701&dest=morges-vogeaz&view=mystop&speed=2", 4800),
+    ("10-alarm-now", "/?lang=en&line=701&dest=morges-vogeaz&view=mystop&speed=2", 7500),
+    ("11-settings", "/?lang=en&line=701&view=settings", 5000),
     ("12-lines-fr", "/?lang=fr", 5000),
     ("13-demo", "/?lang=en&demo=2&autostart=1", 9000),
 ]
-
 
 def find_browser():
     for candidate in BROWSERS:

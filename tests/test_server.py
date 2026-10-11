@@ -23,7 +23,7 @@ class ServerTest(unittest.TestCase):
 
     def test_qr_par_ligne(self):
         page = self.client.get("/qr").data.decode()
-        for number in ("8", "123"):
+        for number in ("701", "701-tolochenaz", "8", "123"):
             self.assertIn(f"/qr/{number}.svg", page)
             svg = self.client.get(f"/qr/{number}.svg")
             self.assertEqual(svg.status_code, 200)
@@ -49,8 +49,30 @@ class ServerTest(unittest.TestCase):
         lines = json.loads((ROOT / "static/data/lines.json").read_text(encoding="utf-8"))["lines"]
         for line in lines:
             for stop in line["stops"]:
-                if stop.get("photo"):
-                    self.assertTrue((ROOT / "static/img/stops" / stop["photo"]).exists(), stop["photo"])
+                for key in ("photo", "picto"):
+                    if stop.get(key):
+                        self.assertTrue((ROOT / "static/img/stops" / stop[key]).exists(), stop[key])
+
+    def test_ligne_701_par_defaut(self):
+        document = json.loads((ROOT / "static/data/lines.json").read_text(encoding="utf-8"))
+        lines = document["lines"]
+        self.assertEqual(document["default"], "701")
+        self.assertEqual(lines[0]["number"], "701", "la ligne par défaut est en tête de liste")
+        keys = [line["number"] for line in lines]
+        self.assertEqual(len(keys), len(set(keys)), "clés de ligne uniques")
+        by_key = {line["number"]: line for line in lines}
+        self.assertEqual(by_key["701-tolochenaz"]["label"], "701")
+        for key, terminus in (("701", "Bourdonnette"), ("701-tolochenaz", "La Plantaz")):
+            stops = by_key[key]["stops"]
+            self.assertEqual(len(stops), 24)
+            self.assertEqual(len({stop["id"] for stop in stops}), 24, "arrêts uniques")
+            self.assertEqual(stops[-1]["name"], terminus)
+            self.assertTrue(all(stop.get("picto") for stop in stops), "un pictogramme par arrêt")
+        ids = lambda key: {stop["id"] for stop in by_key[key]["stops"]}  # noqa: E731
+        # à Morges, la boucle à sens unique ne dessert pas les mêmes arrêts dans les deux sens
+        self.assertIn("morges-casino", ids("701"))
+        self.assertNotIn("morges-casino", ids("701-tolochenaz"))
+        self.assertIn("morges-st-louis", ids("701-tolochenaz"))
 
 
 if __name__ == "__main__":

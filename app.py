@@ -86,11 +86,11 @@ def qr_svg_bytes(url: str) -> bytes:
 
 
 def qr_page_html(items) -> str:
-    """items : (numéro, terminus, url à encoder, adresse de l'image SVG). Réutilisé par tools/build_site.py."""
+    """items : (numéro affiché, terminus, url à encoder, adresse de l'image SVG). Réutilisé par tools/build_site.py."""
     cards = []
     for number, terminus, url, src in items:
         cards.append(
-            f"""<figure><img src="{escape(src)}" alt="QR code ligne {escape(number)}">
+            f"""<figure><img src="{escape(src)}" alt="QR code ligne {escape(number)} vers {escape(terminus)}">
             <figcaption><b>{escape(number)}</b> → {escape(terminus)}<small>{escape(url)}</small></figcaption></figure>"""
         )
     return f"""<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -117,7 +117,7 @@ def qr_svg(number: str):
 
 @app.get("/qr")
 def qr_page():
-    items = [(line["number"], line["stops"][-1]["name"], line_url(line["number"]), f"/qr/{line['number']}.svg")
+    items = [(line.get("label", line["number"]), line["stops"][-1]["name"], line_url(line["number"]), f"/qr/{line['number']}.svg")
              for line in load_lines()]
     return Response(qr_page_html(items), mimetype="text/html")
 

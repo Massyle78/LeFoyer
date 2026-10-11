@@ -1,26 +1,423 @@
 {
-  "_comment": "Données de DÉMONSTRATION (lignes et arrêts fictifs ; photos placeholders). Une ligne = un QR code dans le bus : /?line=8. Les noms d'arrêts sont des noms propres : ils ne sont pas traduits.",
+  "_comment": "Une ligne = un sens = un QR code dans le bus : /?line=701. Ligne 701 (MBC, Morges - Lausanne) : données réelles avec pictogrammes ; lignes 8 et 123 : données de DÉMONSTRATION fictives. Les noms d'arrêts sont des noms propres : ils ne sont pas traduits. 'label' = numéro affiché si plusieurs sens partagent le même numéro.",
   "lines": [
+    {
+      "number": "701",
+      "label": "701",
+      "operator": "MBC (Transports de la région Morges-Bière-Cossonay)",
+      "route": "Tolochenaz, La Plantaz - Morges - Préverenges - Denges - St-Sulpice VD - Ecublens VD - Lausanne, Bourdonnette",
+      "stops": [
+        {
+          "id": "tolochenaz-la-plantaz",
+          "name": "La Plantaz",
+          "commune": "Tolochenaz",
+          "picto": "701/tolochenaz-la-plantaz.png",
+          "color": "#4F6D8A"
+        },
+        {
+          "id": "morges-prelionne",
+          "name": "Prélionne",
+          "commune": "Morges",
+          "picto": "701/morges-prelionne.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-vogeaz",
+          "name": "Vogéaz",
+          "commune": "Morges",
+          "picto": "701/morges-vogeaz.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-eglantine",
+          "name": "Eglantine",
+          "commune": "Morges",
+          "picto": "701/morges-eglantine.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-la-prairie",
+          "name": "La Prairie",
+          "commune": "Morges",
+          "picto": "701/morges-la-prairie.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-gare",
+          "name": "Gare",
+          "commune": "Morges",
+          "picto": "701/morges-gare.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-casino",
+          "name": "Casino",
+          "commune": "Morges",
+          "picto": "701/morges-casino.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-temple",
+          "name": "Temple",
+          "commune": "Morges",
+          "picto": "701/morges-temple.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-blancherie",
+          "name": "Blancherie",
+          "commune": "Morges",
+          "picto": "701/morges-blancherie.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-st-jean-sud",
+          "name": "St-Jean sud",
+          "commune": "Morges",
+          "picto": "701/morges-st-jean-sud.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-bief",
+          "name": "Bief",
+          "commune": "Morges",
+          "picto": "701/morges-bief.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "preverenges-taudaz",
+          "name": "Taudaz",
+          "commune": "Préverenges",
+          "picto": "701/preverenges-taudaz.png",
+          "color": "#2E9E6B"
+        },
+        {
+          "id": "preverenges-village",
+          "name": "Village",
+          "commune": "Préverenges",
+          "picto": "701/preverenges-village.png",
+          "color": "#2E9E6B"
+        },
+        {
+          "id": "denges-pierraz-mur",
+          "name": "Pierraz-Mur",
+          "commune": "Denges",
+          "picto": "701/denges-pierraz-mur.png",
+          "color": "#138A8A"
+        },
+        {
+          "id": "st-sulpice-vd-castolin",
+          "name": "Castolin",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-castolin.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "st-sulpice-vd-en-champagny",
+          "name": "En Champagny",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-en-champagny.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "st-sulpice-vd-ochettaz-ormet",
+          "name": "Ochettaz-Ormet",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-ochettaz-ormet.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "st-sulpice-vd-pre-fleuri",
+          "name": "Pré-Fleuri",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-pre-fleuri.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "st-sulpice-vd-parc-scientifique",
+          "name": "Parc Scientifique",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-parc-scientifique.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "ecublens-vd-campus-des-medias",
+          "name": "Campus des Médias",
+          "commune": "Ecublens VD",
+          "picto": "701/ecublens-vd-campus-des-medias.png",
+          "color": "#8A4FC7"
+        },
+        {
+          "id": "ecublens-vd-champagne",
+          "name": "Champagne",
+          "commune": "Ecublens VD",
+          "picto": "701/ecublens-vd-champagne.png",
+          "color": "#8A4FC7"
+        },
+        {
+          "id": "ecublens-vd-blevallaire",
+          "name": "Blévallaire",
+          "commune": "Ecublens VD",
+          "picto": "701/ecublens-vd-blevallaire.png",
+          "color": "#8A4FC7"
+        },
+        {
+          "id": "ecublens-vd-allee-de-dorigny",
+          "name": "Allée de Dorigny",
+          "commune": "Ecublens VD",
+          "picto": "701/ecublens-vd-allee-de-dorigny.png",
+          "color": "#8A4FC7"
+        },
+        {
+          "id": "lausanne-bourdonnette",
+          "name": "Bourdonnette",
+          "commune": "Lausanne",
+          "picto": "701/lausanne-bourdonnette.png",
+          "color": "#C7354F"
+        }
+      ]
+    },
+    {
+      "number": "701-tolochenaz",
+      "label": "701",
+      "operator": "MBC (Transports de la région Morges-Bière-Cossonay)",
+      "route": "Tolochenaz, La Plantaz - Morges - Préverenges - Denges - St-Sulpice VD - Ecublens VD - Lausanne, Bourdonnette",
+      "stops": [
+        {
+          "id": "lausanne-bourdonnette",
+          "name": "Bourdonnette",
+          "commune": "Lausanne",
+          "picto": "701/lausanne-bourdonnette.png",
+          "color": "#C7354F"
+        },
+        {
+          "id": "ecublens-vd-allee-de-dorigny",
+          "name": "Allée de Dorigny",
+          "commune": "Ecublens VD",
+          "picto": "701/ecublens-vd-allee-de-dorigny.png",
+          "color": "#8A4FC7"
+        },
+        {
+          "id": "ecublens-vd-blevallaire",
+          "name": "Blévallaire",
+          "commune": "Ecublens VD",
+          "picto": "701/ecublens-vd-blevallaire.png",
+          "color": "#8A4FC7"
+        },
+        {
+          "id": "ecublens-vd-champagne",
+          "name": "Champagne",
+          "commune": "Ecublens VD",
+          "picto": "701/ecublens-vd-champagne.png",
+          "color": "#8A4FC7"
+        },
+        {
+          "id": "ecublens-vd-campus-des-medias",
+          "name": "Campus des Médias",
+          "commune": "Ecublens VD",
+          "picto": "701/ecublens-vd-campus-des-medias.png",
+          "color": "#8A4FC7"
+        },
+        {
+          "id": "st-sulpice-vd-parc-scientifique",
+          "name": "Parc Scientifique",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-parc-scientifique.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "st-sulpice-vd-pre-fleuri",
+          "name": "Pré-Fleuri",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-pre-fleuri.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "st-sulpice-vd-ochettaz-ormet",
+          "name": "Ochettaz-Ormet",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-ochettaz-ormet.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "st-sulpice-vd-en-champagny",
+          "name": "En Champagny",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-en-champagny.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "st-sulpice-vd-castolin",
+          "name": "Castolin",
+          "commune": "St-Sulpice VD",
+          "picto": "701/st-sulpice-vd-castolin.png",
+          "color": "#D9751A"
+        },
+        {
+          "id": "denges-pierraz-mur",
+          "name": "Pierraz-Mur",
+          "commune": "Denges",
+          "picto": "701/denges-pierraz-mur.png",
+          "color": "#138A8A"
+        },
+        {
+          "id": "preverenges-village",
+          "name": "Village",
+          "commune": "Préverenges",
+          "picto": "701/preverenges-village.png",
+          "color": "#2E9E6B"
+        },
+        {
+          "id": "preverenges-taudaz",
+          "name": "Taudaz",
+          "commune": "Préverenges",
+          "picto": "701/preverenges-taudaz.png",
+          "color": "#2E9E6B"
+        },
+        {
+          "id": "morges-bief",
+          "name": "Bief",
+          "commune": "Morges",
+          "picto": "701/morges-bief.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-st-jean-sud",
+          "name": "St-Jean sud",
+          "commune": "Morges",
+          "picto": "701/morges-st-jean-sud.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-blancherie",
+          "name": "Blancherie",
+          "commune": "Morges",
+          "picto": "701/morges-blancherie.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-st-louis",
+          "name": "St-Louis",
+          "commune": "Morges",
+          "picto": "701/morges-st-louis.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-charpentiers",
+          "name": "Charpentiers",
+          "commune": "Morges",
+          "picto": "701/morges-charpentiers.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-gare",
+          "name": "Gare",
+          "commune": "Morges",
+          "picto": "701/morges-gare.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-la-prairie",
+          "name": "La Prairie",
+          "commune": "Morges",
+          "picto": "701/morges-la-prairie.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-eglantine",
+          "name": "Eglantine",
+          "commune": "Morges",
+          "picto": "701/morges-eglantine.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-vogeaz",
+          "name": "Vogéaz",
+          "commune": "Morges",
+          "picto": "701/morges-vogeaz.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "morges-prelionne",
+          "name": "Prélionne",
+          "commune": "Morges",
+          "picto": "701/morges-prelionne.png",
+          "color": "#2F6FD0"
+        },
+        {
+          "id": "tolochenaz-la-plantaz",
+          "name": "La Plantaz",
+          "commune": "Tolochenaz",
+          "picto": "701/tolochenaz-la-plantaz.png",
+          "color": "#4F6D8A"
+        }
+      ]
+    },
     {
       "number": "8",
       "stops": [
-        { "id": "gare",            "name": "Gare",            "photo": "gare.jpg" },
-        { "id": "parc",            "name": "Parc",            "photo": "parc.jpg" },
-        { "id": "hopital",         "name": "Hôpital",         "photo": "hopital.jpg" },
-        { "id": "marche",          "name": "Marché",          "photo": null },
-        { "id": "ecole",           "name": "École",           "photo": null },
-        { "id": "lac",             "name": "Lac",             "photo": "lac.jpg" },
-        { "id": "jardin_botanique", "name": "Jardin Botanique", "photo": "jardin_botanique.jpg" }
+        {
+          "id": "gare",
+          "name": "Gare",
+          "photo": "gare.jpg"
+        },
+        {
+          "id": "parc",
+          "name": "Parc",
+          "photo": "parc.jpg"
+        },
+        {
+          "id": "hopital",
+          "name": "Hôpital",
+          "photo": "hopital.jpg"
+        },
+        {
+          "id": "marche",
+          "name": "Marché",
+          "photo": null
+        },
+        {
+          "id": "ecole",
+          "name": "École",
+          "photo": null
+        },
+        {
+          "id": "lac",
+          "name": "Lac",
+          "photo": "lac.jpg"
+        },
+        {
+          "id": "jardin_botanique",
+          "name": "Jardin Botanique",
+          "photo": "jardin_botanique.jpg"
+        }
       ]
     },
     {
       "number": "123",
       "stops": [
-        { "id": "centre",   "name": "Centre",   "photo": null },
-        { "id": "marche",   "name": "Marché",   "photo": null },
-        { "id": "piscine",  "name": "Piscine",  "photo": null },
-        { "id": "terminus", "name": "Terminus", "photo": null }
+        {
+          "id": "centre",
+          "name": "Centre",
+          "photo": null
+        },
+        {
+          "id": "marche",
+          "name": "Marché",
+          "photo": null
+        },
+        {
+          "id": "piscine",
+          "name": "Piscine",
+          "photo": null
+        },
+        {
+          "id": "terminus",
+          "name": "Terminus",
+          "photo": null
+        }
       ]
     }
-  ]
+  ],
+  "default": "701"
 }

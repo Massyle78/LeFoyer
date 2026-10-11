@@ -6,6 +6,7 @@
 //   api.advanceBus()   fait avancer le bus simulé d'un cran
 //   api.reset()        retour au choix de la ligne, voyage vide
 //   api.lang()         langue courante
+//   api.defaultLine()  clé de la ligne par défaut (lines.json)
 
 const STOP = Symbol('demo-stop');
 
@@ -76,7 +77,7 @@ export function createDemo({ speed, loop, api }) {
   async function tour() {
     api.reset();
     await say('demo.c.line', 3000);
-    await tap('[data-act="line"][data-arg="8"]', { after: 1400 });
+    await tap(`[data-act="line"][data-arg="${api.defaultLine()}"]`, { after: 1400 }); // la ligne par défaut (701)
 
     // 1. tout parle dès le toucher
     await say('demo.c.hello', 1800);

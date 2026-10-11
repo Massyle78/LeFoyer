@@ -29,7 +29,7 @@ def main() -> None:
         url = f"{base}/?line={number}"
         (site / "qr").mkdir(exist_ok=True)
         (site / "qr" / f"{number}.svg").write_bytes(qr_svg_bytes(url))
-        items.append((number, line["stops"][-1]["name"], url, f"{number}.svg"))
+        items.append((line.get("label", number), line["stops"][-1]["name"], url, f"{number}.svg"))
     (site / "qr" / "index.html").write_text(qr_page_html(items), encoding="utf-8")
     print(f"site construit dans {site} (QR -> {base})")
 
