@@ -404,7 +404,15 @@ async function start() {
   wakeLockService.init();
   // Page d'accueil = choix du bus. Un QR code (…/?line=8) y répond d'avance et ouvre directement le bus ;
   // sans QR code, on choisit la ligne dans la liste (ou avec le scanner intégré).
+  // Chaque nouvelle ouverture (nouvel onglet, QR code scanné, application relancée) repart de la configuration par défaut :
+  // accueil du bus, aucun arrêt choisi, aucune alarme, bus simulé au départ. Seul un rechargement de la page (history.state
+  // déjà présent) reprend le trajet en cours. Les réglages (langue, voix, couleurs, vibration) sont ceux de la personne, gardés.
+  const freshVisit = !history.state;
   chooseLine(params.get('line'));
+  if (line && freshVisit && !params.get('dest')) {
+    store.dest = null;
+    save();
+  }
   if (!line) {
     store.line = null;
     store.dest = null;

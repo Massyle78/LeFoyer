@@ -1,4 +1,4 @@
-﻿"""Tests du serveur : python -m unittest discover -s tests -p "test_*.py" """
+"""Tests du serveur : python -m unittest discover -s tests -p "test_*.py" """
 import json
 import sys
 import unittest
@@ -26,10 +26,15 @@ class ServerTest(unittest.TestCase):
         self.assertEqual(redirect.status_code, 302)
         self.assertTrue(redirect.headers["Location"].endswith("/static/present.html?demo=2&lang=fr"))
         page = self.client.get("/static/present.html").data.decode()
-        for needle in ("../qr/701.svg", "js/present.js", "img/team/team-1.jpg", 'id="demo"'):
+        for needle in ("img/qr-701.svg", "js/present.js", "img/team/team-1.jpg", 'id="demo"'):
             self.assertIn(needle, page)
-        for path in ("/static/js/present.js", "/static/css/present.css", "/static/img/team/team-1.jpg", "/static/img/team/team-5.jpg"):
+        for path in ("/static/js/present.js", "/static/css/present.css", "/static/img/team/team-1.jpg", "/static/img/team/team-5.jpg", "/static/img/qr-701.svg"):
             self.assertEqual(self.client.get(path).status_code, 200, path)
+
+    def test_qr_de_la_presentation_est_celui_du_site_deploye(self):
+        from app import qr_svg_bytes
+        svg = self.client.get("/static/img/qr-701.svg").data.replace(b"\r\n", b"\n")
+        self.assertEqual(svg, qr_svg_bytes("https://massyle78.github.io/LeFoyer/?line=701"))
 
     def test_qr_par_ligne(self):
         page = self.client.get("/qr").data.decode()

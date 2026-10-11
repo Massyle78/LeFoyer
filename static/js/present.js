@@ -4,6 +4,7 @@
 //   ?lang=en|fr|de|it langue de la démo et des textes de la page                    [défaut en]
 //   ?tour=full        le tour complet (environ 3 min) au lieu de la démo courte d'une minute (par défaut)
 //   ?intro=it         la démo démarre dans cette langue (bonjour en italien) puis passe à ?lang=  (ex. ?lang=fr&intro=it)
+//   ?qr=local         QR code du serveur qui sert la page (adresse réseau en local) au lieu du site déployé (par défaut)
 //   ?loop=0           ne pas rejouer la démo en boucle                              [défaut : en boucle]
 //   ?autostart=1      lance la démo sans l'écran de départ (mais la voix peut être bloquée par le navigateur)
 //   ?rec=1            masque les commandes (enregistrement) ; touches : F plein écran, R relancer, L langue
@@ -81,6 +82,7 @@ addEventListener('keydown', (e) => {
   if (map[e.key.toLowerCase()]) actions[map[e.key.toLowerCase()]]();
 });
 
+if (params.get('qr') === 'local') document.getElementById('qr').src = '../qr/701.svg';
 if (params.get('rec') === '1') document.body.classList.add('rec');
 applyTexts();
 

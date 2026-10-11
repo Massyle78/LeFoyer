@@ -142,6 +142,9 @@ Bus Buddy se construit avec les personnes concernées : on dessine, on imprime d
 1. 🔳 **Choisir son bus** : scan du QR du bus (appareil photo du téléphone : le QR ouvre `/?line=701`), ou bouton **Scanner le QR code**
    intégré quand le navigateur sait lire les QR codes (en HTTPS ou sur `localhost`), ou choix de la ligne dans la liste.
    Le numéro de ligne en haut (ou **Réglages › Changer de bus**) ramène à ce choix.
+   🆕 **Chaque ouverture repart de zéro** : nouvel onglet, QR code scanné ou application relancée → accueil du bus, **aucun arrêt choisi**, aucune alarme, bus simulé au départ.
+   Plusieurs personnes peuvent scanner en même temps : l'état vit uniquement dans chaque téléphone (rien n'est partagé via le serveur). Seul un rechargement de la page reprend le trajet en cours ;
+   les réglages personnels (langue, voix, couleurs, vibration) sont gardés. La démo automatique (`?demo=x`) part toujours des réglages par défaut et n'écrit rien dans le navigateur.
 2. 👋 **Accueil** : *Dire bonjour*, *Vérifier la destination du bus*, *Acheter un billet*, *Aide*.
 3. 👆 Un toucher sur une tuile **la dit à voix haute** puis ouvre la catégorie. Les arrêts se choisissent dans un carrousel
    horizontal (un arrêt à la fois, voisins en transparence ; le nom est dit quand il arrive au centre).
@@ -224,7 +227,7 @@ Une page pensée pour **être enregistrée en plein écran (16:9)** puis posée 
 | **F** · **R** | plein écran · relancer la démo |
 
 Astuce d'enregistrement : soit utiliser les **vidéos toutes faites** (`docs/video/`), soit ouvrir la page en plein écran (F), toucher une fois l'écran de départ du téléphone pour avoir la voix, puis enregistrer
-l'écran. Le QR code encode l'adresse du site déployé ; en local il encode l'adresse de l'ordinateur sur le réseau (voir `BUSBUDDY_PUBLIC_URL`).
+l'écran. Le QR code de la page de présentation est **toujours celui du site déployé** (`https://massyle78.github.io/LeFoyer/?line=701`, fichier `static/img/qr-701.svg` régénérable avec `python tools/make_deployed_qr.py`), même quand la page est servie en local ; `&qr=local` affiche à la place le QR du serveur courant (adresse du réseau local, voir `BUSBUDDY_PUBLIC_URL`).
 
 ---
 

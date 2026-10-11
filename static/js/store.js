@@ -16,7 +16,10 @@ function read() {
 }
 
 export const params = new URLSearchParams(location.search);
-export const store = read();
+// La démo automatique tourne toujours depuis la configuration par défaut et n'écrit rien : elle ne laisse aucune trace
+// (langue, arrêt, réglages) dans le navigateur, pour la personne qui ouvrirait ensuite l'application sur le même appareil.
+const demoMode = parseDemo(params.get('demo')) > 0;
+export const store = demoMode ? { ...defaults } : read();
 
 // Réglages venant de l'adresse (QR code du bus : /?line=8) ; ?lang=fr ; ?demo=2 ; ?speed=20 (secondes)
 if (params.get('lang') && LANGS.includes(params.get('lang'))) store.lang = params.get('lang');
@@ -45,6 +48,7 @@ export const manual = params.get('manual') === '1';
 export const speedSeconds = Number(params.get('speed') ?? (manual || demo ? 0 : 30));
 
 export function save() {
+  if (demoMode) return;
   try {
     localStorage.setItem(KEY, JSON.stringify(store));
   } catch {
