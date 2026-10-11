@@ -71,8 +71,9 @@ L'application est hébergée sur **GitHub Pages** et se met à jour à chaque `g
 ## 🚌 La ligne par défaut : le 701 Morges ⇄ Lausanne
 
 Une **vraie ligne** de la région lausannoise (MBC) : **Tolochenaz, La Plantaz → Morges → Préverenges → Denges → St-Sulpice VD → Ecublens VD → Lausanne, Bourdonnette**,
-soit **24 arrêts par sens**. Chaque arrêt a son **pictogramme** (une idée par image, contours épais, couleur = commune), pensé pour être reconnu
-d'un coup d'œil sans savoir lire : 🌱 La Plantaz · 🚆 Gare de Morges · 🎭 Casino · ⛪ Temple · 🎡 Bief · 🎓 Allée de Dorigny · 🚇 Bourdonnette…
+soit **24 arrêts par sens**. Chaque arrêt a son **pictogramme** (une idée par image, dessin bleu nuit sur une tuile dont la couleur est celle de la commune),
+pensé pour être reconnu d'un coup d'œil sans savoir lire : 🪴 La Plantaz · 🦁 Prélionne · 🚆 Gare de Morges · 🎰 Casino · ⛪ Temple · 🧱 Pierraz-Mur ·
+🔬 Parc Scientifique · 📡 Campus des Médias · 🍾 Champagne · 🌾 Blévallaire · 🌳 Allée de Dorigny · 🏢 Bourdonnette…
 
 À Morges, le bus fait une boucle à sens unique : vers Bourdonnette il dessert *Casino* et *Temple*, vers Tolochenaz *St-Louis* et *Charpentiers*.
 Il y a donc **deux entrées de ligne** (un QR code par sens) : `701` (→ Bourdonnette, par défaut) et `701-tolochenaz` (→ La Plantaz).
@@ -81,8 +82,27 @@ Il y a donc **deux entrées de ligne** (un QR code par sens) : `701` (→ Bourdo
   <img src="docs/ligne-701.png" alt="Les pictogrammes des arrêts de la ligne 701" width="720">
 </p>
 
-> ℹ️ Les pictogrammes viennent du dossier « new graphic chart ». Certains sont à valider sur le terrain (statuts dans `stops.json` du paquet) :
-> *Vogéaz*, *Taudaz* et *En Champagny* sont des images provisoires. Les lignes **8** et **123** restent disponibles comme lignes de test fictives.
+> ℹ️ Les pictogrammes des 26 arrêts viennent du dossier `701_stops` de la nouvelle charte graphique (`tools/import_stop_pictos.py`) :
+> un arrêt absent du dossier garde son pictogramme précédent. Les icônes principales de l'application (bonjour, bus, billet, aide, descendre,
+> perdu(e), malaise, répétez doucement) viennent de `main icons` (`tools/import_icons.py`).
+> Les lignes **8** et **123** restent disponibles comme lignes de test fictives.
+
+---
+
+## 👥 L'équipe au travail
+
+Bus Buddy se construit avec les personnes concernées : on dessine, on imprime des cartes, on teste, on recommence. 🛠️
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/photos/photo-1.jpg" width="240"><br><sub>🧩 Maquettes papier et premiers essais sur la table</sub></td>
+    <td align="center"><img src="docs/photos/photo-2.jpg" width="300"><br><sub>📝 Le tableau « LE FOYER » : signaler la descente, accessibilité, billet, QR code…</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/photos/photo-3.jpg" width="300"><br><sub>✌️ Bonne humeur devant le tableau du projet</sub></td>
+    <td align="center"><img src="docs/photos/photo-4.jpg" width="300"><br><sub>💻 Tout le monde au travail pendant le hackathon</sub></td>
+  </tr>
+</table>
 
 ---
 
@@ -132,14 +152,15 @@ Il y a donc **deux entrées de ligne** (un QR code par sens) : `701` (→ Bourdo
 
 ## 🎬 Démo automatique : `?demo=x`
 
-`x` est la **vitesse** : `?demo=1` normale (environ 3 min), `?demo=2` deux fois plus vite, `?demo=4` en moins d'une minute (de 0,5 à 8).
+`x` est la **vitesse** : `?demo=1` normale (environ 3 min), `?demo=2` deux fois plus vite, `?demo=4` en moins d'une minute, environ 40 s (de 0,5 à 8).
 Un écran de départ demande un toucher (nécessaire pour que le navigateur autorise la voix et la vibration), puis l'application
 « touche » elle-même les vrais boutons, avec une mise en évidence jaune et un bandeau noir qui explique ce qui est montré :
 
 🔳 choix de la ligne → 👆 tout parle au toucher → 🟢🔴 bon / mauvais bus → 🟠 aide pour descendre → 🔴 urgence →
-💬 « répétez doucement » + place assise → 📍 rappel de mon arrêt avec alarmes 🟠 puis 🔴 et vibrations → ⚙️ réglages → 🌍 changement de langue.
+💬 « répétez doucement » (un seul toucher sur la bulle) + 🪑 place assise (dans l'aide) → 📍 rappel de mon arrêt avec alarmes 🟠 puis 🔴 et vibrations →
+⚙️ réglages → 🌍 changement de langue.
 
-La démo se joue sur la **ligne par défaut (701)**. La croix du bandeau l'arrête à tout moment.
+La démo se joue sur la **ligne par défaut (701)**, avec ses pictogrammes d'arrêts et les nouvelles icônes. La croix du bandeau l'arrête à tout moment.
 
 - `&autostart=1` : démarre sans l'écran de départ (voix et vibration peuvent alors être bloquées par le navigateur) ;
 - `&loop=1` : rejoue la démo en boucle ;
@@ -215,6 +236,8 @@ python tools/screenshots.py http://localhost:5000  # depuis le serveur local
 | Ajouter une **langue** | `static/i18n/xx.json` (copier `en.json`) + ajouter le code dans `LANGS` (`static/js/store.js`) et la voix dans `_speech` |
 | Changer les **lignes / arrêts** | `static/data/lines.json` (un arrêt a un `picto` ou une `photo` dans `static/img/stops/` ; `"default"` = ligne par défaut, en tête de liste et utilisée par la démo) |
 | **Importer une nouvelle ligne avec pictogrammes** | `python tools/import_line.py "<dossier ou .zip du paquet>" [--default]` : copie les pictogrammes, crée une entrée par sens et un QR code par sens |
+| Remplacer les **pictogrammes des arrêts** (701) | `python tools/import_stop_pictos.py "<701_stops.zip>"` : noir sur blanc, PNG/JPG/SVG → tuiles 512 px aux couleurs des communes ; puis `python tools/overview_701.py` pour la planche du README |
+| Remplacer les **icônes principales** (bonjour, billet, aide…) | `python tools/import_icons.py "<main icons.zip>"` : dessins noirs → PNG transparents dans `static/img/icons/` |
 | Ajouter un **service d'accessibilité** (lecture, haptique, braille…) | `static/js/a11y.js` : créer un objet `{ name, speak?, feedback?, stop? }` et l'enregistrer avec `register()` dans `main.js` |
 | Brancher la **vraie position** (GPS / API temps réel) | remplacer `SimulatedPosition` (`static/js/position.js`) : il suffit de fournir `state = { next, atStop }` et d'appeler `onChange` |
 | Modifier la **démo automatique** | `static/js/demo.js` (le scénario `tour()`) et les textes `demo.c.*` dans `static/i18n/*.json` |
@@ -242,7 +265,7 @@ joue un parcours équivalent toute seule.
 - Le mode hors-ligne (service worker) exige HTTPS (ou `localhost`) ; en HTTP sur une adresse locale l'app fonctionne mais sans cache hors-ligne.
 - Le scanner de QR code intégré dépend du navigateur (BarcodeDetector : Chrome Android surtout) et demande HTTPS ; sinon, utiliser l'appareil photo du téléphone.
 - La position du bus est **simulée** (pas de GPS ni de flux temps réel).
-- Traductions allemand / italien non relues ; icônes et photos d'arrêts issues de la charte / de photos provisoires.
+- Traductions allemand / italien non relues ; pictogrammes d'arrêts et icônes fournis par l'équipe (à valider sur le terrain, notamment les arrêts proches ou ambigus).
 - La synthèse vocale dépend des voix installées sur le téléphone.
 
 ---
